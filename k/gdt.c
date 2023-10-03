@@ -1,5 +1,6 @@
 #include "gdt.h"
 #include "load_gdt.h"
+#include "pretty_printer.h"
 
 struct GDT gdt_entries[5];
 struct GDT_PTR gdt_first;
@@ -34,6 +35,7 @@ void init_gdt()
     gdt_first.limit_size = sizeof(gdt_entries) - 1;
     gdt_first.base_address = (struct GDT*)&gdt_entries;
 
-    // Load GDT by calling load_gdt function in load_gdt.s
+    // Load GDT by calling load_gdt function
     load_gdt((struct GDT*)&gdt_first);
+    // gdt_pretty_print(&gdt_first);
 }
