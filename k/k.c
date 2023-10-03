@@ -34,6 +34,7 @@ void k_main(unsigned long magic, multiboot_info_t *info)
 	(void)info;
 
     init_gdt();
+    printf("This line goes after init_gdt() function\r\n");
 
 	char star[4] = "|/-\\";
 	char *fb = (void *)0xb8000;
