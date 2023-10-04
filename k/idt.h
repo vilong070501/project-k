@@ -18,6 +18,7 @@ struct IDT_PTR
 	struct IDT* base_address; // base address of the first IDT segment
 } __attribute__((packed));
 
+extern void load_idt(struct IDT *idt_entries);
 extern void init_idt();
 
 #endif

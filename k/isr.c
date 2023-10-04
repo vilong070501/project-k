@@ -173,8 +173,8 @@ void generic_isr_handler(struct registers regs)
 	current_regs = (struct registers*) &regs;
   	switch(regs.int_no){
     	case 0:
-      	isr_0_handler();
-      	break;
+      		isr_0_handler();
+      		break;
     	case 1:
 			isr_1_handler();
 			break;

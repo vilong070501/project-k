@@ -1,6 +1,5 @@
 #include "idt.h"
 #include "isr.h"
-#include "load_idt.h"
 
 struct IDT idt_entries[16];
 struct IDT_PTR idt_first;
@@ -24,6 +23,12 @@ void init_isr_stub_table()
 	isr_stub_table[13] = isr_13;
 	isr_stub_table[14] = isr_14;
 	isr_stub_table[15] = isr_15;
+}
+
+void load_idt(struct IDT *idt_entries)
+{
+    asm volatile ("lidt %0" : /* No output */ : "m"(*idt_entries) : "memory");
+    asm volatile ("ret");
 }
 
 void set_idt_descriptor(u8 intnum, void* isr, u16 selector, u8 flags)

@@ -14,7 +14,6 @@ void load_tss()
 {
     asm volatile ("mov $0x2B, %ax\n");
     asm volatile ("ltr %ax\n");
-    asm volatile ("ret\n");
 }
 
 static void set_tss_entry(u16 ss0, u32 esp0)

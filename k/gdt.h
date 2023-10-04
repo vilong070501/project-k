@@ -27,6 +27,7 @@ struct GDT_PTR
     struct GDT* base_address;   // base address of the first GDT segment
 } __attribute__((packed));
 
+extern void load_gdt(struct GDT* gdt_entries);
 extern void create_descriptor(int segment, u32 base_low, u32 limit,
                         u8 access, u8 granularity);
 extern void init_gdt();

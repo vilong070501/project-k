@@ -1,11 +1,22 @@
 #include "gdt.h"
-#include "load_gdt.h"
 #include "pretty_printer.h"
 
 struct GDT gdt_entries[6];
 struct GDT_PTR gdt_first;
 
-extern void load_gdt(struct GDT*);
+void load_gdt(struct GDT *gdt_entries)
+{
+    asm volatile ("lgdt %0" : /* No output */ : "m"(*gdt_entries) : "memory");
+
+    asm volatile (" movw $0x10, %ax   \n \
+                    movw %ax, %ds     \n \
+                    movw %ax, %es     \n \
+                    movw %ax, %fs     \n \
+                    movw %ax, %gs     \n \
+                    movw %ax, %ss     \n \
+                    ljmp $0x08, $next \n \
+                    next:      	      \n");
+}
 
 void create_descriptor(int segment, u32 base_low, u32 limit,
                         u8 access, u8 granularity)
