@@ -8,6 +8,7 @@
 #define KERNEL_DATA_SEGMENT 2
 #define USER_CODE_SEGMENT 3
 #define USER_DATA_SEGMENT 4
+#define TSS_SEGMENT 5
 
 struct GDT
 {
@@ -26,6 +27,7 @@ struct GDT_PTR
     struct GDT* base_address;   // base address of the first GDT segment
 } __attribute__((packed));
 
+extern void create_descriptor(int segment, u32 base_low, u32 limit,
+                        u8 access, u8 granularity);
 extern void init_gdt();
-
 #endif

@@ -2,7 +2,7 @@
 #include "load_gdt.h"
 #include "pretty_printer.h"
 
-struct GDT gdt_entries[5];
+struct GDT gdt_entries[6];
 struct GDT_PTR gdt_first;
 
 extern void load_gdt(struct GDT*);
@@ -29,8 +29,8 @@ void init_gdt()
     create_descriptor(NULL_SEGMENT, 0, 0, 0, 0);
     create_descriptor(KERNEL_CODE_SEGMENT, 0, 0xFFFFF, 0x9A, 0xCF);
     create_descriptor(KERNEL_DATA_SEGMENT, 0, 0xFFFFF, 0x92, 0xCF);
-    create_descriptor(USER_CODE_SEGMENT, 0, 0xFFFFF, 0xFF, 0xCF);
-    create_descriptor(USER_DATA_SEGMENT, 0, 0xFFFFF, 0xF3, 0xCF);
+    create_descriptor(USER_CODE_SEGMENT, 0, 0xFFFFF, 0xFA, 0xCF);
+    create_descriptor(USER_DATA_SEGMENT, 0, 0xFFFFF, 0xF2, 0xCF);
 
     gdt_first.limit_size = sizeof(gdt_entries) - 1;
     gdt_first.base_address = (struct GDT*)&gdt_entries;

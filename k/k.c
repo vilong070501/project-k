@@ -27,6 +27,8 @@
 
 #include "../libs/libc/include/stdio.h"
 #include "gdt.h"
+#include "idt.h"
+#include "tss.h"
 
 void k_main(unsigned long magic, multiboot_info_t *info)
 {
@@ -35,6 +37,31 @@ void k_main(unsigned long magic, multiboot_info_t *info)
 
     init_gdt();
     printf("This line goes after init_gdt() function\r\n");
+
+    init_tss();
+    printf("This line goes after init_tss() function\r\n");
+
+    init_idt();
+    printf("This line goes after init_idt() function\r\n");
+
+    asm volatile("\tmov $12345, %eax");
+    asm volatile("\tint $0");
+    asm volatile("\tint $1");
+    asm volatile("\tint $2");
+    asm volatile("\tint $3");
+    asm volatile("\tint $4");
+    asm volatile("\tint $5");
+    asm volatile("\tint $6");
+    asm volatile("\tint $7");
+    asm volatile("\tint $8");
+    asm volatile("\tint $9");
+    asm volatile("\tint $10");
+    asm volatile("\tint $11");
+    asm volatile("\tint $12");
+    asm volatile("\tint $13");
+    asm volatile("\tint $14");
+    asm volatile("\tint $15");
+    
 
 	char star[4] = "|/-\\";
 	char *fb = (void *)0xb8000;

@@ -6,6 +6,7 @@
 static inline void load_idt(struct IDT *idt_entries)
 {
     asm volatile ("lidt %0" : /* No output */ : "m"(*idt_entries) : "memory");
+    asm volatile ("ret");
 }
 
 #endif
