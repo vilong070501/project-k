@@ -1,13 +1,15 @@
 #include "tss.h"
 #include "gdt.h"
+#include "../libs/libc/include/stdio.h"
 #include "../libs/libc/include/string.h"
 
 struct TSS default_tss;
 
 extern u32 get_eip()
 {
-    asm volatile ("pop %eax\n");
-    asm volatile ("jmp %eax\n");
+    u32 eip;
+    asm volatile ("mov (%%esp), %0" : "=r"(eip));
+    return eip;
 }
 
 void load_tss()
@@ -19,6 +21,7 @@ void load_tss()
 static void set_tss_entry(u16 ss0, u32 esp0)
 {
     u32 eip = get_eip();
+    printf("eip = %x\n", eip);
     u32 base = (u32) &default_tss;
     u32 limit = base + sizeof(struct TSS);
 
