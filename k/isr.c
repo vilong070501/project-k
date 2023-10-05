@@ -1,4 +1,5 @@
 #include "isr.h"
+#include "pic_8259.h"
 #include "../libs/libc/include/stdio.h"
 
 static struct registers* current_regs = NULL;
@@ -225,6 +226,7 @@ void generic_isr_handler(struct registers regs)
 			break;
   	}	
   	current_regs = NULL;
+	send_pic_eoi(regs.int_no);
 }
 
 void isr_0_handler()

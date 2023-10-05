@@ -1,5 +1,6 @@
 #include "idt.h"
 #include "isr.h"
+#include "pic_8259.h"
 
 struct IDT idt_entries[16];
 struct IDT_PTR idt_first;
@@ -43,6 +44,7 @@ void set_idt_descriptor(u8 intnum, void* isr, u16 selector, u8 flags)
 void init_idt()
 {
 	init_isr_stub_table();
+	init_pic_8259();
 	for (u8 intnum = 0; intnum < 16; intnum++)
 	{
 		set_idt_descriptor(intnum, isr_stub_table[intnum], 0x08, 0x8E);
@@ -52,4 +54,5 @@ void init_idt()
 	idt_first.base_address = (struct IDT*)&idt_entries;
 
 	load_idt((struct IDT*)&idt_first);
+	asm volatile ("sti");
 }

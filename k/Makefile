@@ -33,6 +33,7 @@ OBJS	= \
 	  write.o \
 	  gdt.o \
 	  tss.o \
+	  pic_8259.o \
 	  idt.o \
 	  isr.o \
 
