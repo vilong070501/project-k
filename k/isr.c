@@ -1,5 +1,5 @@
-#include "isr.h"
-#include "pic_8259.h"
+#include "include/k/isr.h"
+#include "include/k/pic_8259.h"
 #include "../libs/libc/include/stdio.h"
 
 static struct registers* current_regs = NULL;

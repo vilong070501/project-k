@@ -1,7 +1,7 @@
 #ifndef TSS_H
 #define TSS_H
 
-#include "include/k/types.h"
+#include "types.h"
 
 struct TSS
 {

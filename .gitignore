@@ -1,0 +1,8 @@
+.vscode/
+iso/
+roms/
+libs/
+*.d
+*.o
+*k
+*.iso

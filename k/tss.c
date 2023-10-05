@@ -1,5 +1,5 @@
-#include "tss.h"
-#include "gdt.h"
+#include "include/k/tss.h"
+#include "include/k/gdt.h"
 #include "../libs/libc/include/stdio.h"
 #include "../libs/libc/include/string.h"
 

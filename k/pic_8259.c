@@ -1,9 +1,9 @@
 #include "io.h"
-#include "pic_8259.h"
+#include "include/k/pic_8259.h"
 
 void init_pic_8259()
 {
-    u8 a1, a2;
+    //u8 a1, a2;
 
     /* Save masks registers */
     //a1 = inb(PIC1_DATA);

@@ -1,4 +1,4 @@
-#include "gdt.h"
+#include "include/k/gdt.h"
 #include "pretty_printer.h"
 
 struct GDT gdt_entries[6];

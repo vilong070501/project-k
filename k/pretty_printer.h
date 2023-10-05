@@ -1,7 +1,7 @@
 #ifndef PRETTY_PRINTER_H
 #define PRETTY_PRINTER_H
 
-#include "gdt.h"
+#include "include/k/gdt.h"
 #include "../libs/libc/include/stdio.h"
 
 void gdt_pretty_print(struct GDT_PTR* gdtr)

@@ -26,9 +26,9 @@
 #include "multiboot.h"
 
 #include "../libs/libc/include/stdio.h"
-#include "gdt.h"
-#include "idt.h"
-#include "tss.h"
+#include "include/k/gdt.h"
+#include "include/k/idt.h"
+#include "include/k/tss.h"
 
 void k_main(unsigned long magic, multiboot_info_t *info)
 {

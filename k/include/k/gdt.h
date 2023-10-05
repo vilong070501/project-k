@@ -1,7 +1,7 @@
 #ifndef GDT_H
 #define GDT_H
 
-#include "include/k/types.h"
+#include "types.h"
 
 #define NULL_SEGMENT 0
 #define KERNEL_CODE_SEGMENT 1

@@ -1,7 +1,7 @@
 #ifndef PIC_8259_H
 #define PIC_8259_H
 
-#include "include/k/types.h"
+#include "types.h"
 
 #define PIC1_COMMAND    0x20        /* The master PIC's port A */
 #define PIC1_DATA       0x21        /* The master PIC's port B */

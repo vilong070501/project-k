@@ -1,6 +1,6 @@
-#include "idt.h"
-#include "isr.h"
-#include "pic_8259.h"
+#include "include/k/idt.h"
+#include "include/k/isr.h"
+#include "include/k/pic_8259.h"
 
 struct IDT idt_entries[16];
 struct IDT_PTR idt_first;
