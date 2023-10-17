@@ -15,7 +15,7 @@ struct GDT
     u16 segment_limit;  // segment limit first 0-15 bits
     u16 base_low;       // base first 0-15 bits
     u8 base_middle;     // base 16-23 bits
-    u8 access;            // access byte
+    u8 access;          // access byte
     u8 granularity;     // high 4 bits (flags) low 4 bits (limit 4 last bits)
     u8 base_high;       // base 24-31 bits
 } __attribute__((packed));
@@ -27,7 +27,10 @@ struct GDT_PTR
     struct GDT* base_address;   // base address of the first GDT segment
 } __attribute__((packed));
 
-extern void load_gdt(struct GDT* gdt_entries);
+
+// asm gdt functions
+extern void load_gdt();
+
 extern void create_descriptor(int segment, u32 base_low, u32 limit,
                         u8 access, u8 granularity);
 extern void init_gdt();

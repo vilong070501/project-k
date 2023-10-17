@@ -6,3 +6,4 @@ libs/
 *.o
 *k
 *.iso
+*log.txt

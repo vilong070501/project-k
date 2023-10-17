@@ -31,6 +31,7 @@ OBJS	= \
 	  list.o \
 	  memory.o \
 	  write.o \
+	  load_gdt.o \
 	  gdt.o \
 	  tss.o \
 	  pic_8259.o \

@@ -11,12 +11,12 @@ void gdt_pretty_print(struct GDT_PTR* gdtr)
 	{
 		struct GDT *entry = (struct GDT*)(gdtr->base_address + i * sizeof(struct GDT));
 		printf("GDT[%d]: \r\n", i);
-		printf("segment_limit = %d\r\n", entry->segment_limit);
-    		printf("base_low      = %d\r\n", entry->base_low);
-    		printf("base_middle   = %d\r\n", entry->base_middle);
-    		printf("access	      = %d\r\n", entry->access);
-    		printf("granularity   = %d\r\n", entry->granularity);
-		printf("base_high     = %d\r\n", entry->base_high);
+		printf("segment_limit = %x\r\n", entry->segment_limit);
+		printf("base_low      = %x\r\n", entry->base_low);
+		printf("base_middle   = %x\r\n", entry->base_middle);
+		printf("access	      = %x\r\n", entry->access);
+		printf("granularity   = %x\r\n", entry->granularity);
+		printf("base_high     = %x\r\n", entry->base_high);
 	}
 }
 

@@ -4,19 +4,6 @@
 struct GDT gdt_entries[6];
 struct GDT_PTR gdt_first;
 
-void load_gdt(struct GDT *gdt_entries)
-{
-    asm volatile ("lgdt %0" : /* No output */ : "m"(*gdt_entries) : "memory");
-
-    asm volatile (" movw $0x10, %ax   \n \
-                    movw %ax, %ds     \n \
-                    movw %ax, %es     \n \
-                    movw %ax, %fs     \n \
-                    movw %ax, %gs     \n \
-                    movw %ax, %ss     \n \
-                    ljmp $0x08, $next \n \
-                    next:      	      \n");
-}
 
 void create_descriptor(int segment, u32 base_low, u32 limit,
                         u8 access, u8 granularity)
@@ -46,7 +33,10 @@ void init_gdt()
     gdt_first.limit_size = sizeof(gdt_entries) - 1;
     gdt_first.base_address = (struct GDT*)&gdt_entries;
 
+    struct GDT* first = (struct GDT*)&gdt_first;
+
     // Load GDT by calling load_gdt function
-    load_gdt((struct GDT*)&gdt_first);
+    asm volatile ("lgdt %0" : /* No output */ : "m"(*first) : "memory");
+    load_gdt();
     // gdt_pretty_print(&gdt_first);
 }

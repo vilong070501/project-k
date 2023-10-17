@@ -38,6 +38,7 @@ void k_main(unsigned long magic, multiboot_info_t *info)
     init_gdt();
     printf("This line goes after init_gdt() function\r\n");
 
+/*
     init_tss();
     printf("This line goes after init_tss() function\r\n");
 
@@ -61,7 +62,7 @@ void k_main(unsigned long magic, multiboot_info_t *info)
     asm volatile("\tint $13");
     asm volatile("\tint $14");
     asm volatile("\tint $15");
-    
+*/    
 
 	char star[4] = "|/-\\";
 	char *fb = (void *)0xb8000;
