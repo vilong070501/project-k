@@ -3,6 +3,8 @@
 
 #include "types.h"
 
+#define NB_OF_EXCEPTIONS 16
+
 struct IDT
 {
 	u16 base_low; 		// lower 16 bits 0-15 of the address to jump to when this interrupt fires
@@ -18,7 +20,8 @@ struct IDT_PTR
 	struct IDT* base_address; // base address of the first IDT segment
 } __attribute__((packed));
 
-extern void load_idt(struct IDT *idt_entries);
-extern void init_idt();
+void load_idt(struct IDT *idt_entries);
+void idt_set_entry(u8 intnum, u32 isr, u16 selector, u8 flags);
+void init_idt();
 
 #endif

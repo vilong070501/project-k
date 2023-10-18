@@ -34,6 +34,7 @@ OBJS	= \
 	  load_gdt.o \
 	  gdt.o \
 	  tss.o \
+	  exception.o \
 	  pic_8259.o \
 	  idt.o \
 	  isr.o \
