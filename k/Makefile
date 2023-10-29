@@ -32,12 +32,16 @@ OBJS	= \
 	  memory.o \
 	  write.o \
 	  load_gdt.o \
+	  load_idt.o \
 	  gdt.o \
 	  tss.o \
+	  irq.o \
 	  exception.o \
 	  pic_8259.o \
 	  idt.o \
 	  isr.o \
+	  timer.o \
+	  keyboard.o \
 
 
 DEPS = $(OBJS:.o=.d)

@@ -21,11 +21,10 @@ void load_tss()
 static void set_tss_entry(u16 ss0, u32 esp0)
 {
     u32 eip = get_eip();
-    printf("eip = %x\n", eip);
     u32 base = (u32) &default_tss;
     u32 limit = base + sizeof(struct TSS);
 
-    create_descriptor(TSS_SEGMENT, base, limit, 0xE9, 0x00);
+    gdt_set_entry(TSS_SEGMENT, base, limit, 0xE9, 0x00);
     memset(&default_tss, 0x0, sizeof(struct TSS));
 
     default_tss.ss0 = ss0;

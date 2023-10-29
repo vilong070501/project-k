@@ -22,7 +22,9 @@
 #define ICW4_BUF_MASTER	0x0C		/* Buffered mode/master */
 #define ICW4_SFNM	    0x10		/* Special fully nested (not) */
 
-extern void init_pic_8259();
-extern void send_pic_eoi(u8 irq);
+void init_pic_8259(void);
+void send_pic_eoi(u8 irq);
+void irq_set_mask(u8 irq);
+void irq_clear_mask(u8 irq);
 
 #endif

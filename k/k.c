@@ -29,6 +29,24 @@
 #include "include/k/gdt.h"
 #include "include/k/idt.h"
 #include "include/k/tss.h"
+#include "include/k/keyboard.h"
+#include "include/k/timer.h"
+#include "include/k/types.h"
+
+void function_1(TIMER_FUNC_ARGS *args) {
+    printf("Executing function_1() after %d millisecond\n", args->timeout);
+}
+
+void function_2(TIMER_FUNC_ARGS *args) {
+    printf("Executing function_2() after %d millisecond\n", args->timeout);
+}
+
+void add_timer_function(TIMER_FUNCTION function, u32 timeout) {
+    TIMER_FUNC_ARGS args = {0};
+    args.timeout = timeout;
+    timer_register_function(function, &args);
+}
+
 
 void k_main(unsigned long magic, multiboot_info_t *info)
 {
@@ -38,17 +56,35 @@ void k_main(unsigned long magic, multiboot_info_t *info)
     init_gdt();
     printf("This line goes after init_gdt() function\r\n");
 
-    // init_tss();
-    // printf("This line goes after init_tss() function\r\n");
+    init_tss();
+    printf("This line goes after init_tss() function\r\n");
 
     init_idt();
     printf("This line goes after init_idt() function\r\n");
+
+    init_timer();
+    printf("This line goes after init_timer() function\r\n");
 
     // raise division by zero
     asm volatile("\txorl %edx, %edx");
     asm volatile("\tmovl $0x7b, %eax");
     asm volatile("\tmovl $0, %ecx");
     asm volatile("\tidivl %ecx");
+
+    keyboard_init();
+
+    // printf("Type something...\n");
+    // while(1)
+    // {
+    //     printf("Key pressed: %d\n", getScancode());
+    // }
+
+    // add_timer_function(function_1, 200);
+    // add_timer_function(function_2, 2300);
+    // while(1) {
+    //     printf("Hello\n");
+    //     sleep(1);
+    // }
 
 	char star[4] = "|/-\\";
 	char *fb = (void *)0xb8000;

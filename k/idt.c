@@ -2,29 +2,31 @@
 #include "include/k/isr.h"
 #include "include/k/pic_8259.h"
 
-struct IDT idt_entries[NB_OF_EXCEPTIONS];
-struct IDT_PTR idt_first;
-
-void load_idt(struct IDT *idt_entries)
-{
-    asm volatile ("lidt %0" : /* No output */ : "m"(*idt_entries) : "memory");
-    asm volatile ("ret");
-}
+IDT idt_entries[NB_OF_INTERRUPT_ENTRIES];
+IDT_PTR idt_first;
 
 void idt_set_entry(u8 intnum, u32 isr, u16 selector, u8 flags)
 {
-	struct IDT *entry = &idt_entries[intnum];
+	IDT *entry = &(idt_entries[intnum]);
 
-	entry->base_low = (u32)isr & 0xFFFF;
+	entry->base_low = isr & 0xFFFF;
 	entry->segment_selector = selector;
 	entry->zero = 0;
-	entry->type = flags;
-	entry->base_high = ((u32)isr >> 16) & 0xFFFF;
+	entry->type = flags | 0x60;
+	entry->base_high = (isr >> 16) & 0xFFFF;
+}
+
+void enable_idt_entry(u8 intnum)
+{
+    idt_entries[intnum].type |= 0x80;
 }
 
 void init_idt()
 {
+	idt_first.limit_size = sizeof(idt_entries) - 1;
+	idt_first.base_address = (IDT*)&idt_entries;
 	init_pic_8259();
+    
 	idt_set_entry(0, (u32)exception_0, 0x08, 0x8E);
     idt_set_entry(1, (u32)exception_1, 0x08, 0x8E);
     idt_set_entry(2, (u32)exception_2, 0x08, 0x8E);
@@ -41,10 +43,23 @@ void init_idt()
     idt_set_entry(13, (u32)exception_13, 0x08, 0x8E);
     idt_set_entry(14, (u32)exception_14, 0x08, 0x8E);
     idt_set_entry(15, (u32)exception_15, 0x08, 0x8E);
+    idt_set_entry(32, (u32)irq_0, 0x08, 0x8E);
+    idt_set_entry(33, (u32)irq_1, 0x08, 0x8E);
+    idt_set_entry(34, (u32)irq_2, 0x08, 0x8E);
+    idt_set_entry(35, (u32)irq_3, 0x08, 0x8E);
+    idt_set_entry(36, (u32)irq_4, 0x08, 0x8E);
+    idt_set_entry(37, (u32)irq_5, 0x08, 0x8E);
+    idt_set_entry(38, (u32)irq_6, 0x08, 0x8E);
+    idt_set_entry(39, (u32)irq_7, 0x08, 0x8E);
+    idt_set_entry(40, (u32)irq_8, 0x08, 0x8E);
+    idt_set_entry(41, (u32)irq_9, 0x08, 0x8E);
+    idt_set_entry(42, (u32)irq_10, 0x08, 0x8E);
+    idt_set_entry(43, (u32)irq_11, 0x08, 0x8E);
+    idt_set_entry(44, (u32)irq_12, 0x08, 0x8E);
+    idt_set_entry(45, (u32)irq_13, 0x08, 0x8E);
+    idt_set_entry(46, (u32)irq_14, 0x08, 0x8E);
+    idt_set_entry(47, (u32)irq_15, 0x08, 0x8E);
 
-	idt_first.limit_size = sizeof(idt_entries) - 1;
-	idt_first.base_address = (struct IDT*)&idt_entries;
-
-	load_idt((struct IDT*)&idt_first);
-	asm volatile ("sti");
+	load_idt(&idt_first);
+    asm volatile ("sti");
 }

@@ -25,6 +25,7 @@
 
 #include "libvga.h"
 #include "io.h"
+#include "k/types.h"
 
 /*
 ** Use to save the VGA plane 2, which contains the text font,
@@ -248,4 +249,36 @@ void libvga_switch_mode3h(void)
 		vram[i] = libvga_txt_mode_font[i];
 
 	libvga_write_regs(libvga_regs_80x25xtext);
+}
+
+u32 vga_item_entry(u8 ch, VGA_COLOR_TYPE fore_color, VGA_COLOR_TYPE back_color)
+{
+	u16 ax = 0;
+	u8 ah = 0, al = 0;
+
+	ah = back_color;
+	ah = ah << 4;
+	ah = ah | fore_color;
+	ax = ah;
+	ax = ax << 8;
+	al = ch;
+	ax = ax | al;
+
+	return ax;
+}
+
+void vga_set_cursor_pos(u8 x, u8 y)
+{
+	// The screen is 80 characters wide
+	u16 cursor_location = y * VGA_WIDTH + x;
+	outb(VGA_CRTC_INDEX, 14);
+	outb(VGA_CRTC_DATA, cursor_location >> 8);
+	outb(VGA_CRTC_INDEX, 15);
+	outb(VGA_CRTC_DATA, cursor_location);
+}
+
+void vga_disable_cursor()
+{
+	outb(VGA_CRTC_INDEX, 10);
+	outb(VGA_CRTC_DATA, 32);
 }
