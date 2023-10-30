@@ -24,7 +24,8 @@ typedef struct
 // asm function defined in load_idt.S
 extern void load_idt(IDT_PTR *idt_first);
 
-void enable_idt_entry(u8 intnum);
+void enable_idt_gate(u8 intnum);
+void disable_idt_gate(u8 intnum);
 // Fill entries of IDT
 void idt_set_entry(u8 intnum, u32 isr, u16 selector, u8 flags);
 // Initialize IDT
