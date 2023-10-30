@@ -22,7 +22,7 @@ int getKey(void)
     return -1;
 }
 
-void keyboard_handler(registers *reg)
+void keyboard_handler(Registers *reg)
 {
     key = 0;
     int scancode = getKey();

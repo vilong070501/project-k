@@ -2,14 +2,16 @@
 .global load_idt
 
 load_idt:
-    pushl %ebp            /* Save ol call frame */
-    mov %esp, %ebp        /* Initialize new call frame */
 
-    // load idt
-    movl 8(%ebp), %eax    /* load address of IDT from function argument */
-    lidt (%eax)           /* load IDT */
+    /* Make new call frame */
+    push %ebp             // Save ol call frame
+    mov %esp, %ebp        // Initialize new call frame
 
-    // restore old call frame
-    movl %ebp, %esp
-    popl %ebp
+    /* Load IDT */
+    mov 8(%ebp), %eax     // Load address of IDT from function argument
+    lidt (%eax)           // Load IDT
+
+    /* Restore old call frame */
+    mov %ebp, %esp
+    pop %ebp
     ret 

@@ -37,7 +37,7 @@ void timer_set_frequency(u16 freq)
     asm volatile("sti");
 }
 
-void timer_handler(registers *reg)
+void timer_handler(Registers *reg)
 {
     printf("In function timer_handler\n");
     u32 i;

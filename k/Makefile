@@ -35,6 +35,7 @@ OBJS	= \
 	  load_gdt.o \
 	  load_idt.o \
 	  gdt.o \
+	  hal.o \
 	  tss.o \
 	  irq.o \
 	  exception.o \

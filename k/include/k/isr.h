@@ -9,10 +9,10 @@ typedef struct
 	u32 edi, esi, ebp, esp, ebx, edx, ecx, eax; // pushed by pusha
 	u32 int_no, err_code; 						// interrupt number and error code
 	u32 eip, cs, eflags, user_esp, ss; 			// pushed by the processor automatically
-} __attribute__((packed)) registers;
+} __attribute__((packed)) Registers;
 
 // ISR function prototype
-typedef void (*ISR)(registers*);
+typedef void (*ISR)(Registers*);
 
 /**
  * register given handler to interrupt handlers at given num
@@ -28,13 +28,13 @@ void isr_end_interrupt(int num);
  * invoke exception routine,
  * being called in exception.S
  */
-void isr_exception_handler(registers *reg);
+void isr_exception_handler(Registers *reg);
 
 /**
  * invoke isr routine and send eoi to pic,
  * being called in irq.S
  */
-void isr_irq_handler(registers *reg);
+void isr_irq_handler(Registers *reg);
 
 
 // defined in exception.S

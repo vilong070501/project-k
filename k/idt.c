@@ -2,35 +2,35 @@
 #include "include/k/isr.h"
 #include "include/k/pic_8259.h"
 
-IDT idt_entries[NB_OF_INTERRUPT_ENTRIES];
+IDT_ENTRY idt_entries[NB_OF_INTERRUPT_ENTRIES];
 IDT_PTR idt_first = { sizeof(idt_entries) - 1, idt_entries };
 
 void idt_set_entry(u8 intnum, u32 isr, u16 selector, u8 flags)
 {
-	IDT *entry = &(idt_entries[intnum]);
+	IDT_ENTRY *entry = &(idt_entries[intnum]);
 
 	entry->base_low = isr & 0xFFFF;
 	entry->segment_selector = selector;
 	entry->zero = 0;
-	entry->type = flags | 0x60;
+	entry->type = flags;
 	entry->base_high = (isr >> 16) & 0xFFFF;
 }
 
 void enable_idt_gate(u8 intnum)
 {
-    idt_entries[intnum].type |= 0x80;
+    idt_entries[intnum].type |= IDT_FLAG_PRESENT;
 }
 
 void disable_idt_gate(u8 intnum)
 {
-    idt_entries[intnum].type &= ~0x80;
+    idt_entries[intnum].type &= ~(IDT_FLAG_PRESENT);
 }
 
 void init_idt()
 {
-	idt_first.limit_size = sizeof(idt_entries) - 1;
-	idt_first.base_address = (IDT*)&idt_entries;
-	init_pic_8259();
+	// idt_first.limit_size = sizeof(idt_entries) - 1;
+	// idt_first.base_address = (IDT_ENTRY *)&idt_entries;
+	// init_pic_8259();
     
 	// idt_set_entry(0, (u32)exception_0, 0x08, 0x8E);
     // idt_set_entry(1, (u32)exception_1, 0x08, 0x8E);
@@ -65,6 +65,6 @@ void init_idt()
     // idt_set_entry(46, (u32)irq_14, 0x08, 0x8E);
     // idt_set_entry(47, (u32)irq_15, 0x08, 0x8E);
 
-	// load_idt(&idt_first);
-    asm volatile ("sti");
+	load_idt(&idt_first);
+    // asm volatile ("sti");
 }

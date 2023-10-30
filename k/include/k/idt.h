@@ -4,6 +4,7 @@
 #include "types.h"
 
 #define NB_OF_INTERRUPT_ENTRIES 256
+#define IDT_FLAG_PRESENT 0x80
 
 typedef struct
 {
@@ -12,12 +13,12 @@ typedef struct
 	u8 zero; 				// unusedn always be zero
 	u8 type; 				// types trap, interrupt gates
 	u16 base_high;			// upper 16 bits 16-31 of the address to jump to
-} __attribute__((packed)) IDT;
+} __attribute__((packed)) IDT_ENTRY;
 
 typedef struct
 {
 	u16 limit_size; 			// limit size of all IDT segments
-	IDT* base_address; 	// base address of the first IDT segment
+	IDT_ENTRY *base_address; 	// base address of the first IDT segment
 } __attribute__((packed)) IDT_PTR;
 
 

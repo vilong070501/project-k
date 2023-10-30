@@ -52,7 +52,7 @@ void isr_register_interrupt_handler(int num, ISR handler)
     if (num < NB_OF_INTERRUPT_ENTRIES)
     {
         g_interrupt_handlers[num] = handler;
-        enable_idt_entry(num);
+        enable_idt_gate(num);
     }
 }
 
@@ -65,7 +65,7 @@ void isr_end_interrupt(int num)
 }
 
 
-static void print_registers(registers *reg)
+static void print_registers(Registers *reg)
 {
     printf("REGISTERS:\n");
     printf("err_code=%d\n", reg->err_code);
@@ -78,7 +78,7 @@ static void print_registers(registers *reg)
  * invoke isr routine and send eoi to pic,
  * being called in irq.S
  */
-void isr_irq_handler(registers *reg)
+void isr_irq_handler(Registers *reg)
 {
     if (reg->int_no < NB_OF_INTERRUPT_ENTRIES && g_interrupt_handlers[reg->int_no] != NULL)
 	{
@@ -92,7 +92,7 @@ void isr_irq_handler(registers *reg)
  * invoke exception routine,
  * being called in exception.S
  */
-void isr_exception_handler(registers *reg)
+void isr_exception_handler(Registers *reg)
 {
     if (reg->int_no < 32)
 	{
