@@ -31,6 +31,7 @@ OBJS	= \
 	  list.o \
 	  memory.o \
 	  write.o \
+	  console.o \
 	  load_gdt.o \
 	  load_idt.o \
 	  gdt.o \
@@ -42,7 +43,7 @@ OBJS	= \
 	  isr.o \
 	  timer.o \
 	  keyboard.o \
-
+	  
 
 DEPS = $(OBJS:.o=.d)
 

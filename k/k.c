@@ -32,19 +32,20 @@
 #include "include/k/keyboard.h"
 #include "include/k/timer.h"
 #include "include/k/types.h"
+#include "include/k/console.h"
 
 void function_1(TIMER_FUNC_ARGS *args) {
-    printf("Executing function_1() after %d millisecond\n", args->timeout);
+printf("Executing function_1() after %d millisecond\n", args->timeout);
 }
 
 void function_2(TIMER_FUNC_ARGS *args) {
-    printf("Executing function_2() after %d millisecond\n", args->timeout);
+printf("Executing function_2() after %d millisecond\n", args->timeout);
 }
 
 void add_timer_function(TIMER_FUNCTION function, u32 timeout) {
-    TIMER_FUNC_ARGS args = {0};
-    args.timeout = timeout;
-    timer_register_function(function, &args);
+TIMER_FUNC_ARGS args = {0};
+args.timeout = timeout;
+timer_register_function(function, &args);
 }
 
 
@@ -52,6 +53,10 @@ void k_main(unsigned long magic, multiboot_info_t *info)
 {
 	(void)magic;
 	(void)info;
+
+    init_console(COLOR_WHITE, COLOR_BLACK);
+    console_printf("Test for print on console - %s with a number %d, and an address %x\n", "My test", 75, VGA_ADDRESS);
+    printf("Test for print on console\n");
 
     init_gdt();
     printf("This line goes after init_gdt() function\r\n");
@@ -91,10 +96,10 @@ void k_main(unsigned long magic, multiboot_info_t *info)
 
     printf("Test for function write\n");
 	for (unsigned i = 0; ; ) {
-		*fb = star[i++ % 4];
+	*fb = star[i++ % 4];
 	}
 
 
 	for (;;)
-		asm volatile ("hlt");
+	asm volatile ("hlt");
 }

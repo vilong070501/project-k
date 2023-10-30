@@ -4,7 +4,6 @@ roms/
 libs/
 *.d
 *.o
-*k
 *.iso
 *log.txt
 *log
