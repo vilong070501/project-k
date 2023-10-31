@@ -26,6 +26,7 @@ include ../config.mk
 TARGET	= k
 OBJS	= \
 	  crt0.o \
+	  io_asm.o \
 	  k.o \
 	  libvga.o \
 	  list.o \
@@ -37,12 +38,11 @@ OBJS	= \
 	  gdt.o \
 	  isr.o \
 	  isr_asm.o \
+	  irq.o \
 	  hal.o \
 	  tss.o \
 	  pic_8259.o \
 	  idt.o \
-	  timer.o \
-	  keyboard.o \
 	  
 
 DEPS = $(OBJS:.o=.d)

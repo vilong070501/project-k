@@ -41,5 +41,5 @@ extern void load_gdt();
 void gdt_set_entry(int segment, u32 base_low, u32 limit,
                         u8 access, u8 granularity);
 // Initialize GDT
-void init_gdt();
+void init_GDT();
 #endif

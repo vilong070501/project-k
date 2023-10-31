@@ -26,10 +26,7 @@ void disable_idt_gate(int intnum)
     idt_entries[intnum].type &= ~(IDT_FLAG_PRESENT);
 }
 
-void init_idt()
+void init_IDT()
 {
-	// init_pic_8259();
-
-
 	load_idt(&idt_first);
 }

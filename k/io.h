@@ -3,6 +3,8 @@
 
 #include <k/types.h>
 
+#define UNUSED_PORT 0x80
+
 static inline void outb(u16 port, u8 val)
 {
 	asm volatile ("outb %0, %1" : /* No output */ : "a"(val), "d"(port));
@@ -29,6 +31,11 @@ static inline u16 inw(u16 port)
 	asm volatile ("inw %1, %0" : "=&a"(res) : "d"(port));
 
 	return res;
+}
+
+static inline void iowait()
+{
+	outb(UNUSED_PORT, 0);
 }
 
 #endif				/* !IO_H_ */

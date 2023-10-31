@@ -32,10 +32,10 @@ typedef struct
 #define IRQ15_RESERVED      0x0F
 
 // ISR function prototype
-typedef void (*ISR)(Registers*);
+typedef void (*ISRHandler)(Registers*);
 
 void ISR_handler(Registers *reg);
-
-void init_isr(void);
+void init_ISR(void);
+void ISR_RegisterHandler(int int_no, ISRHandler handler);
 
 #endif
