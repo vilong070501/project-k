@@ -1,11 +1,12 @@
 #include "include/k/idt.h"
 #include "include/k/isr.h"
+#include "isr_init_entries.h"
 #include "include/k/pic_8259.h"
 #include "../libs/libc/include/stdio.h"
 
 
 // For both exceptions and irq interrupt
-ISR g_interrupt_handlers[NB_OF_INTERRUPT_ENTRIES] = {NULL};
+ISR interrupt_handlers[NB_OF_INTERRUPT_ENTRIES];
 
 // for more details, see Intel manual -> Interrupt & Exception Handling
 char *exception_messages[32] = {
@@ -24,7 +25,7 @@ char *exception_messages[32] = {
     "Stack-Segment Fault",
     "General Protection",
     "Page Fault",
-    "Unknown Interrupt (intel reserved)",
+    "Reserved",
     "x87 FPU Floating-Point Error (Math Fault)",
     "Alignment Check",
     "Machine Check",
@@ -36,75 +37,52 @@ char *exception_messages[32] = {
     "Reserved",
     "Reserved",
     "Reserved",
+    "Reserved",
     "Hypervisor Injection Exception",
     "VMM Communication Exception",
     "Security Exception",
-    "Reserved",
     "Reserved"
 };
 
-/**
- * register given handler to interrupt handlers at given num
- */
-void isr_register_interrupt_handler(int num, ISR handler)
+
+void print_registers(Registers *regs)
 {
-    printf("IRQ %d registered\n", num);
-    if (num < NB_OF_INTERRUPT_ENTRIES)
+    printf("eax=%x, ebx=%x, ecx=%x, edx=%x, esi=%x, edi=%x\n",
+    regs->eax, regs->ebx, regs->ecx, regs->edx, regs->esi, regs->edi);
+    printf("esp=%x, ebp=%x, eip=%x, eflags=%x, cs=%x, ds=%x, ss=%x\n",
+    regs->user_esp, regs->ebp, regs->eip, regs->eflags, regs->cs, regs->ds, regs->ss);
+}
+
+static void kernel_panic()
+{
+    asm volatile ("cli");
+    asm volatile ("hlt");
+}
+
+void ISR_handler(Registers *regs)
+{
+    if (interrupt_handlers[regs->int_no] != NULL)
     {
-        g_interrupt_handlers[num] = handler;
-        enable_idt_gate(num);
+        interrupt_handlers[regs->int_no](regs);
+    }
+    else if (regs->int_no >= 32)
+    {
+        printf("Unhandled interrupt %s\n", regs->int_no);
+    }
+    else
+    {
+        printf("Unhandled exception %d: \"%s\"\n", regs->int_no, exception_messages[regs->int_no]);
+        print_registers(regs);
+        kernel_panic();
     }
 }
 
-/*
- * turn off current interrupt
-*/
-void isr_end_interrupt(int num)
+void init_isr(void)
 {
-    send_pic_eoi(num);
-}
-
-
-static void print_registers(Registers *reg)
-{
-    printf("REGISTERS:\n");
-    printf("err_code=%d\n", reg->err_code);
-    printf("eax=0x%x, ebx=0x%x, ecx=0x%x, edx=0x%x\n", reg->eax, reg->ebx, reg->ecx, reg->edx);
-    printf("edi=0x%x, esi=0x%x, ebp=0x%x, esp=0x%x\n", reg->edi, reg->esi, reg->ebp, reg->esp);
-    printf("eip=0x%x, cs=0x%x, ss=0x%x, eflags=0x%x, user_esp=0x%x\n", reg->eip, reg->cs, reg->cs, reg->eflags, reg->user_esp);
-}
-
-/**
- * invoke isr routine and send eoi to pic,
- * being called in irq.S
- */
-void isr_irq_handler(Registers *reg)
-{
-    if (reg->int_no < NB_OF_INTERRUPT_ENTRIES && g_interrupt_handlers[reg->int_no] != NULL)
-	{
-        ISR handler = g_interrupt_handlers[reg->int_no];
-        handler(reg);
+    ISR_InitializeEntries();
+    for (int i = 0; i < NB_OF_INTERRUPT_ENTRIES; i++)
+    {
+        enable_idt_gate(i);
     }
-    send_pic_eoi(reg->int_no);
-}
-
-/**
- * invoke exception routine,
- * being called in exception.S
- */
-void isr_exception_handler(Registers *reg)
-{
-    if (reg->int_no < 32)
-	{
-        printf("isr_exception_handler\n");
-        printf("EXCEPTION: %s\n", exception_messages[reg->int_no]);
-        print_registers(reg);
-        for (;;)
-            ;
-    }
-    if (reg->int_no < NB_OF_INTERRUPT_ENTRIES && g_interrupt_handlers[reg->int_no] != NULL)
-	{
-        ISR handler = g_interrupt_handlers[reg->int_no];
-        handler(reg);
-    }
+    disable_idt_gate(0x80);
 }
