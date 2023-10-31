@@ -50,6 +50,18 @@ void k_main(unsigned long magic, multiboot_info_t *info)
 
     HAL_initialize();
 
+    // Raise Division by zero exception
+    // asm volatile ("mov $0, %eax");
+    // asm volatile ("div %eax");
+    // asm volatile("ret");
+
+    // Rasie another Division by zero exception due to Overflow
+    asm volatile ("mov 0xffffffff, %eax");
+    asm volatile ("mov 0xffffffff, %edx");
+    asm volatile ("mov $0x2, %ebx");
+    asm volatile ("div %ebx");
+    asm volatile("ret");
+
     // init_console(COLOR_WHITE, COLOR_BLACK);
     // console_printf("Test for print on console - %s with a number %d, and an address %x\n", "My test", 75, VGA_ADDRESS);
     // printf("Test for print on console\n");

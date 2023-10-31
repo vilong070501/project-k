@@ -35,13 +35,12 @@ OBJS	= \
 	  load_gdt.o \
 	  load_idt.o \
 	  gdt.o \
+	  isr.o \
+	  isr_asm.o \
 	  hal.o \
 	  tss.o \
-	  irq.o \
-	  exception.o \
 	  pic_8259.o \
 	  idt.o \
-	  isr.o \
 	  timer.o \
 	  keyboard.o \
 	  
