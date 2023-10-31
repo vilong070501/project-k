@@ -28,20 +28,21 @@
 #include "../libs/libc/include/stdio.h"
 #include "include/k/hal.h"
 #include "include/k/irq.h"
+#include "include/k/timer.h"
 
-// void function_1(TIMER_FUNC_ARGS *args) {
-// printf("Executing function_1() after %d millisecond\n", args->timeout);
-// }
+void function_1(TIMER_FUNC_ARGS *args) {
+    console_printf("Executing function_1() after %d millisecond\n", args->timeout);
+}
 
-// void function_2(TIMER_FUNC_ARGS *args) {
-// printf("Executing function_2() after %d millisecond\n", args->timeout);
-// }
+void function_2(TIMER_FUNC_ARGS *args) {
+    console_printf("Executing function_2() after %d millisecond\n", args->timeout);
+}
 
-// void add_timer_function(TIMER_FUNCTION function, u32 timeout) {
-// TIMER_FUNC_ARGS args = {0};
-// args.timeout = timeout;
-// timer_register_function(function, &args);
-// }
+void add_timer_function(TIMER_FUNCTION function, u32 timeout) {
+    TIMER_FUNC_ARGS args = {0};
+    args.timeout = timeout;
+    timer_register_function(function, &args);
+}
 
 void timer(Registers *regs)
 {
@@ -56,7 +57,7 @@ void k_main(unsigned long magic, multiboot_info_t *info)
 
     HAL_initialize();
 
-    IRQ_RegisterHandler(0, timer);
+    // IRQ_RegisterHandler(0, timer);
 
     // Raise Division by zero exception
     // asm volatile ("mov $0, %eax");
@@ -100,10 +101,10 @@ void k_main(unsigned long magic, multiboot_info_t *info)
     //     printf("Key pressed: %d\n", getScancode());
     // }
 
-    // add_timer_function(function_1, 200);
-    // add_timer_function(function_2, 2300);
+    add_timer_function(function_1, 200);
+    add_timer_function(function_2, 300);
     // while(1) {
-    //     printf("Hello\n");
+    //     console_printf("Hello\n");
     //     sleep(1);
     // }
 

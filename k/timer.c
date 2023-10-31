@@ -2,7 +2,9 @@
 
 #include "include/k/idt.h"
 #include "include/k/isr.h"
+#include "include/k/irq.h"
 #include "include/k/types.h"
+#include "include/k/console.h"
 #include "../libs/libc/include/stdio.h"
 #include "../libs/libc/include/string.h"
 #include "io.h"
@@ -14,6 +16,9 @@ u16 freq_hz = 0;
 // timer functions to be called when that ticks reached in irq handler
 TIMER_FUNCTION_MANAGER timer_function_manager;
 
+extern void enable_interrupts(void);
+extern void disable_interrupts(void);
+
 u32 gettick()
 {
     return ticks;
@@ -22,7 +27,7 @@ u32 gettick()
 void timer_set_frequency(u16 freq)
 {
     // Disable interrupts
-    asm volatile("cli");
+    disable_interrupts();
 
     freq_hz = freq;
     u16 divisor = TIMER_INPUT_CLOCK_FREQUENCY / freq;
@@ -34,16 +39,14 @@ void timer_set_frequency(u16 freq)
     outb(TIMER_CHANNEL_0_DATA_PORT, (divisor >> 8) & 0xFF);
 
     // Enable interrupts
-    asm volatile("sti");
+    enable_interrupts();
 }
 
 void timer_handler(Registers *reg)
 {
-    printf("In function timer_handler\n");
     u32 i;
     TIMER_FUNC_ARGS *args = NULL;
     ticks++;
-    printf("ticks = %d\n", ticks);
     for (i = 0; i < MAXIMUM_TIMER_FUNCTIONS; i++)
     {
         args = &(timer_function_manager.func_args[i]);
@@ -59,7 +62,7 @@ void timer_register_function(TIMER_FUNCTION function, TIMER_FUNC_ARGS *args)
     u32 index = 0;
     if (function == NULL || args == NULL)
     {
-        printf("Error: failed to register timer function %x\n", function);
+        console_printf("Error: failed to register timer function %x\n", function);
         return;
     }
     index = (++timer_function_manager.current_index) % MAXIMUM_TIMER_FUNCTIONS;
@@ -72,7 +75,7 @@ void init_timer()
 {
     // IRQ0 will fire 100 times per second
     timer_set_frequency(100);
-    isr_register_interrupt_handler(IRQ_BASE, timer_handler);
+    IRQ_RegisterHandler(0, timer_handler);
 }
 
 void sleep(int sec)
