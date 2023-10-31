@@ -45,6 +45,6 @@ void disable_idt_gate(int intnum);
 // Fill entries of IDT
 void idt_set_entry(int intnum, u32 isr, u16 selector, u8 flags);
 // Initialize IDT
-void init_idt();
+void init_IDT();
 
 #endif

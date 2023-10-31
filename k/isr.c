@@ -1,12 +1,14 @@
 #include "include/k/idt.h"
 #include "include/k/isr.h"
-#include "isr_init_entries.h"
 #include "include/k/pic_8259.h"
 #include "../libs/libc/include/stdio.h"
+#include "isr_init_entries.h"
 
 
 // For both exceptions and irq interrupt
-ISR interrupt_handlers[NB_OF_INTERRUPT_ENTRIES];
+ISRHandler interrupt_handlers[NB_OF_INTERRUPT_ENTRIES];
+
+extern void kernel_panic();
 
 // for more details, see Intel manual -> Interrupt & Exception Handling
 char *exception_messages[32] = {
@@ -53,12 +55,6 @@ void print_registers(Registers *regs)
     regs->user_esp, regs->ebp, regs->eip, regs->eflags, regs->cs, regs->ds, regs->ss);
 }
 
-static void kernel_panic()
-{
-    asm volatile ("cli");
-    asm volatile ("hlt");
-}
-
 void ISR_handler(Registers *regs)
 {
     if (interrupt_handlers[regs->int_no] != NULL)
@@ -77,7 +73,7 @@ void ISR_handler(Registers *regs)
     }
 }
 
-void init_isr(void)
+void init_ISR(void)
 {
     ISR_InitializeEntries();
     for (int i = 0; i < NB_OF_INTERRUPT_ENTRIES; i++)
@@ -85,4 +81,10 @@ void init_isr(void)
         enable_idt_gate(i);
     }
     disable_idt_gate(0x80);
+}
+
+void ISR_RegisterHandler(int int_no, ISRHandler handler)
+{
+    interrupt_handlers[int_no] = handler;
+    enable_idt_gate(int_no);
 }

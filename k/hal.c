@@ -1,11 +1,22 @@
-#include "include/k/hal.h"
+#include "include/k/console.h"
 #include "include/k/gdt.h"
+#include "include/k/hal.h"
 #include "include/k/idt.h"
+#include "include/k/irq.h"
 #include "include/k/isr.h"
+#include "../libs/libc/include/stdio.h"
+#include "libvga.h"
 
 void HAL_initialize(void)
 {
-    init_gdt();
-    init_idt();
-    init_isr();
+    init_console(COLOR_WHITE, COLOR_BLACK);
+    console_printf("Console initialization finished\n");
+    init_GDT();
+    console_printf("GDT initialization finished\n");
+    init_IDT();
+    console_printf("IDT initialization finished\n");
+    init_ISR();
+    console_printf("ISR initialization finished\n");
+    init_IRQ();
+    console_printf("IRQ initialization finished\n");
 }

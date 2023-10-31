@@ -23,7 +23,7 @@ void gdt_set_entry(int segment, u32 base_low, u32 limit,
     entry->access = access;
 }
 
-void init_gdt()
+void init_GDT()
 {
     // TODO: Change magic numbers of gdt_entry
     gdt_set_entry(NULL_SEGMENT, 0, 0, 0, 0);

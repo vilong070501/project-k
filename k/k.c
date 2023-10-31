@@ -27,6 +27,7 @@
 
 #include "../libs/libc/include/stdio.h"
 #include "include/k/hal.h"
+#include "include/k/irq.h"
 
 // void function_1(TIMER_FUNC_ARGS *args) {
 // printf("Executing function_1() after %d millisecond\n", args->timeout);
@@ -42,6 +43,11 @@
 // timer_register_function(function, &args);
 // }
 
+void timer(Registers *regs)
+{
+    console_printf(".");
+}
+
 
 void k_main(unsigned long magic, multiboot_info_t *info)
 {
@@ -50,17 +56,19 @@ void k_main(unsigned long magic, multiboot_info_t *info)
 
     HAL_initialize();
 
+    IRQ_RegisterHandler(0, timer);
+
     // Raise Division by zero exception
     // asm volatile ("mov $0, %eax");
     // asm volatile ("div %eax");
     // asm volatile("ret");
 
     // Rasie another Division by zero exception due to Overflow
-    asm volatile ("mov 0xffffffff, %eax");
-    asm volatile ("mov 0xffffffff, %edx");
-    asm volatile ("mov $0x2, %ebx");
-    asm volatile ("div %ebx");
-    asm volatile("ret");
+    // asm volatile ("mov 0xffffffff, %eax");
+    // asm volatile ("mov 0xffffffff, %edx");
+    // asm volatile ("mov $0x2, %ebx");
+    // asm volatile ("div %ebx");
+    // asm volatile("ret");
 
     // init_console(COLOR_WHITE, COLOR_BLACK);
     // console_printf("Test for print on console - %s with a number %d, and an address %x\n", "My test", 75, VGA_ADDRESS);
