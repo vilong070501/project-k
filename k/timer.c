@@ -71,6 +71,12 @@ void timer_register_function(TIMER_FUNCTION function, TIMER_FUNC_ARGS *args)
     memcpy(&timer_function_manager.func_args[index], args, sizeof(TIMER_FUNC_ARGS));
 }
 
+void add_timer_function(TIMER_FUNCTION function, u32 timeout) {
+    TIMER_FUNC_ARGS args = {0};
+    args.timeout = timeout;
+    timer_register_function(function, &args);
+}
+
 void init_timer()
 {
     // IRQ0 will fire 100 times per second
