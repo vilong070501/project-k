@@ -38,4 +38,9 @@ static inline int toupper(int c)
 	return c;
 }
 
+static inline int isalpha(int c)
+{
+	return ( (c >= 'A') && (c <='Z') ||  (c >= 'a') && (c <='z') );
+}
+
 #endif				/* !CTYPE_H_ */

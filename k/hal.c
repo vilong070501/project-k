@@ -4,6 +4,7 @@
 #include "include/k/idt.h"
 #include "include/k/irq.h"
 #include "include/k/isr.h"
+#include "include/k/keyboard.h"
 #include "include/k/timer.h"
 #include "../libs/libc/include/stdio.h"
 #include "libvga.h"
@@ -22,4 +23,6 @@ void HAL_initialize(void)
     console_printf("IRQ initialization finished\n");
     init_timer();
     console_printf("Timer initialization finished\n");
+    init_keyboard();
+    console_printf("Keyboard initialization finished\n");
 }
