@@ -5,9 +5,10 @@
 #define KEYBOARD_STATUS_PORT    0x64
 #define KEYBOARD_COMMAND_PORT   0x64
 
-void keyboard_init(void);
+void init_keyboard(void);
 int getKey(void);
 int keyboard_getScancode(void);
+char keyboard_getChar(void);
 char keyboard_getChar(void);
 
 #endif

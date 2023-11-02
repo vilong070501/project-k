@@ -44,6 +44,7 @@ OBJS	= \
 	  tss.o \
 	  pic_8259.o \
 	  timer.o \
+	  keyboard.o \
 	  
 
 DEPS = $(OBJS:.o=.d)
