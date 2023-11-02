@@ -36,13 +36,14 @@ OBJS	= \
 	  load_gdt.o \
 	  load_idt.o \
 	  gdt.o \
+	  idt.o \
 	  isr.o \
 	  isr_asm.o \
 	  irq.o \
 	  hal.o \
 	  tss.o \
 	  pic_8259.o \
-	  idt.o \
+	  timer.o \
 	  
 
 DEPS = $(OBJS:.o=.d)

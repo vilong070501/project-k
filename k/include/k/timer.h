@@ -20,7 +20,7 @@ typedef void (*TIMER_FUNCTION)(TIMER_FUNC_ARGS *);
 
 typedef struct {
     u32 current_index;
-    // timer functions to be called when tha ticks reached un irq handler
+    // timer functions to be called when the ticks reached an irq handler
     TIMER_FUNCTION functions[MAXIMUM_TIMER_FUNCTIONS];
     // arguments of each above timer functions
     TIMER_FUNC_ARGS func_args[MAXIMUM_TIMER_FUNCTIONS];
@@ -29,5 +29,6 @@ typedef struct {
 void init_timer();
 void sleep(int sec);
 void timer_register_function(TIMER_FUNCTION function, TIMER_FUNC_ARGS *args);
+void add_timer_function(TIMER_FUNCTION function, u32 timeout);
 
 #endif
