@@ -1,5 +1,6 @@
 #include "include/k/gdt.h"
 #include "pretty_printer.h"
+#include "include/k/tss.h"
 
 GDT_ENTRY gdt_entries[NB_OF_GDT_ENTRIES];
 GDT_PTR gdt_first = { sizeof(gdt_entries) - 1, gdt_entries};
@@ -32,6 +33,10 @@ void init_GDT()
     gdt_set_entry(USER_CODE_SEGMENT, 0, 0xFFFFF, 0xFA, 0xCF);
     gdt_set_entry(USER_DATA_SEGMENT, 0, 0xFFFFF, 0xF2, 0xCF);
 
+    init_TSS();
+
     // Load GDT by calling load_gdt function
-    load_gdt(&gdt_first, KERNEL_CODE_SEGMENT_OFFSET, KERNEL_DATA_SEGMENT_OFFSET, USER_CODE_SEGMENT_OFFSET, USER_DATA_SEGMENT_OFFSET);
+    load_gdt(&gdt_first, KERNEL_CODE_SEGMENT_OFFSET, KERNEL_DATA_SEGMENT_OFFSET, USER_CODE_SEGMENT_OFFSET, USER_DATA_SEGMENT_OFFSET, TSS_SEGMENT_OFFSET);
+    // load_gdt(&gdt_first);
+    // load_tss();
 }

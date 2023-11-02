@@ -40,12 +40,6 @@ void function_2(TIMER_FUNC_ARGS *args) {
     console_printf("Executing function_2() after %d millisecond\n", args->timeout);
 }
 
-void timer(Registers *regs)
-{
-    console_printf(".");
-}
-
-
 void k_main(unsigned long magic, multiboot_info_t *info)
 {
 	(void)magic;
