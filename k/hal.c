@@ -6,7 +6,6 @@
 #include "include/k/isr.h"
 #include "include/k/keyboard.h"
 #include "include/k/timer.h"
-#include "include/k/tss.h"
 #include "../libs/libc/include/stdio.h"
 #include "libvga.h"
 
@@ -16,10 +15,9 @@ void HAL_initialize(void)
     console_printf("Console initialization finished\n");
     init_GDT();
     console_printf("GDT initialization finished\n");
+    console_printf("TSS initialization finished\n");
     init_IDT();
     console_printf("IDT initialization finished\n");
-    init_TSS();
-    console_printf("TSS initialization finished\n");
     init_ISR();
     console_printf("ISR initialization finished\n");
     init_IRQ();

@@ -1,5 +1,4 @@
 #include "include/k/gdt.h"
-#include "pretty_printer.h"
 #include "include/k/tss.h"
 
 GDT_ENTRY gdt_entries[NB_OF_GDT_ENTRIES];
