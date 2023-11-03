@@ -34,7 +34,6 @@ OBJS	= \
 	  write.o \
 	  console.o \
 	  load_gdt.o \
-	  load_tss.o \
 	  load_idt.o \
 	  gdt.o \
 	  tss.o \

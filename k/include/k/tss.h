@@ -20,17 +20,16 @@ struct TSS
 	u32 ds;
 	u32 fs;
 	u32 gs;
-	u32 ldt_selector;
+	u32 ldt;
 	u32 trap;
-	u32 io_map;
+	u32 iomap_base;
 } __attribute__((packed));
 
 typedef struct TSS TSS;
 
-extern void load_tss();
-extern u32 get_eip();
-extern void init_TSS();
+void load_tss(void);
+extern void init_TSS(void);
 void set_tss_stack(u32 esp0);
-void print_tss();
+void print_tss(void);
 
 #endif
