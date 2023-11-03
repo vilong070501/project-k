@@ -35,16 +35,21 @@
 # define ATA_REG_HEAD(PORT) ((PORT) + 6)
 # define ATA_REG_COMMAND(PORT) ((PORT) + 7)
 # define ATA_REG_STATUS(PORT) ((PORT) + 7)
+# define ATA_REG_CONTROL(PORT) ((PORT) + 12)
+# define ATA_REG_ALTSTATUS(PORT) ((PORT) + 12)
+# define ATA_REG_DEVADDRESS(PORT) ((PORT) + 13)
 
 /* Status bits */
-# define ERR (1 << 0)
-# define DRQ (1 << 3)
-# define SRV (1 << 4)
-# define DF (1 << 5)
-# define RDY (1 << 6)
-# define BSY (1 << 7)
+# define ERR  (1 << 0)	// Error
+# define IDX  (1 << 1)  // Index
+# define DRQ  (1 << 3)	// Data request ready
+# define SRV  (1 << 4)	// Drive seek complete
+# define DF   (1 << 5)	// Drive write fault
+# define RDY  (1 << 6)	// Drive ready
+# define BSY  (1 << 7)	// Busy
 
-# define ABRT (1 << 2)
+
+# define ABRT (1 << 2)	// Command aborted
 
 /* ATAPI signature */
 # define ATAPI_SIG_SC 0x01
@@ -55,6 +60,7 @@
 /* ATA commands */
 # define IDENTIFY_PACKET_DEVICE 0xA1
 # define PACKET 0xA0
+# define IDENTIFY 0xEC
 
 /* SCSI commands */
 # define READ_12 0xA8
