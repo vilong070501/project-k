@@ -35,14 +35,14 @@ static inline u16 inw(u16 port)
 
 static inline void outl(u16 port, u16 val)
 {
-	asm volatile ("outl %0, %1" : /* No output */ : "a"(val), "d"(port));
+	asm volatile ("outl %%eax, %%dx" : /* No output */ : "d"(port), "a"(val));
 }
 
 static inline u16 inl(u16 port)
 {
 	u16 res;
 
-	asm volatile ("inl %1, %0" : "=&a"(res) : "d"(port));
+	asm volatile ("inl %%dx, %%eax" : "=&a"(res) : "d"(port));
 
 	return res;
 }

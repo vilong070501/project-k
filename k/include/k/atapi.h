@@ -14,7 +14,7 @@
 
 /* Drive selection bytes */
 # define ATA_PORT_MASTER 0x00
-# define ATA_PORT_SLAVE 0x10
+# define ATA_PORT_SLAVE 0x01
 
 /* ATA bus IO ports */
 # define PRIMARY_REG 0x1F0
@@ -35,6 +35,10 @@
 # define ATA_REG_HEAD(PORT) ((PORT) + 6)
 # define ATA_REG_COMMAND(PORT) ((PORT) + 7)
 # define ATA_REG_STATUS(PORT) ((PORT) + 7)
+# define ATA_REG_SECTOR_COUNT1(PORT) ((PORT) + 8)
+# define ATA_REG_LBA3(PORT) ((PORT) + 9)
+# define ATA_REG_LBA4(PORT) ((PORT) + 10)
+# define ATA_REG_LBA5(PORT) ((PORT) + 11)
 # define ATA_REG_CONTROL(PORT) ((PORT) + 12)
 # define ATA_REG_ALTSTATUS(PORT) ((PORT) + 12)
 # define ATA_REG_DEVADDRESS(PORT) ((PORT) + 13)
@@ -58,9 +62,19 @@
 # define ATAPI_SIG_LBA_HI 0xEB
 
 /* ATA commands */
-# define IDENTIFY_PACKET_DEVICE 0xA1
-# define PACKET 0xA0
-# define IDENTIFY 0xEC
+#define READ_PIO          0x20
+#define READ_PIO_EXT      0x24
+#define READ_DMA          0xC8
+#define READ_DMA_EXT      0x25
+#define WRITE_PIO         0x30
+#define WRITE_PIO_EXT     0x34
+#define WRITE_DMA         0xCA
+#define WRITE_DMA_EXT     0x35
+#define CACHE_FLUSH       0xE7
+#define CACHE_FLUSH_EXT   0xEA
+#define PACKET            0xA0
+#define IDENTIFY_PACKET_DEVICE   0xA1
+#define IDENTIFY          0xEC
 
 /* SCSI commands */
 # define READ_12 0xA8
