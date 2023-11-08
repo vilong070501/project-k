@@ -121,10 +121,10 @@ void mouse_handler(Registers *reg)
             mouse_x_pos	= 0;
         if (mouse_y_pos < 0)
             mouse_y_pos	= 0;
-        if (mouse_x_pos > VGA_WIDTH)
-            mouse_x_pos	= VGA_WIDTH - 1;
-        if (mouse_y_pos > VGA_HEIGHT)
-            mouse_y_pos	= VGA_HEIGHT - 1;
+        if (mouse_x_pos > VGA_TEXT_WIDTH)
+            mouse_x_pos	= VGA_TEXT_WIDTH - 1;
+        if (mouse_y_pos > VGA_TEXT_HEIGHT)
+            mouse_y_pos	= VGA_TEXT_HEIGHT - 1;
 
         clear_console(COLOR_WHITE, COLOR_BLACK);
         console_gotoxy(mouse_x_pos, mouse_y_pos);

@@ -27,6 +27,11 @@
 #include "io.h"
 #include "k/types.h"
 
+/**
+ * A gllobal VGA buffer
+*/
+static u8* vga_buffer;
+
 /*
 ** Use to save the VGA plane 2, which contains the text font,
 ** when we switch into graphic mode.
@@ -251,7 +256,7 @@ void libvga_switch_mode3h(void)
 	libvga_write_regs(libvga_regs_80x25xtext);
 }
 
-u32 vga_item_entry(u8 ch, VGA_COLOR_TYPE fore_color, VGA_COLOR_TYPE back_color)
+u32 vga_text_item_entry(u8 ch, VGA_COLOR_TYPE fore_color, VGA_COLOR_TYPE back_color)
 {
 	u16 ax = 0;
 	u8 ah = 0, al = 0;
@@ -267,10 +272,10 @@ u32 vga_item_entry(u8 ch, VGA_COLOR_TYPE fore_color, VGA_COLOR_TYPE back_color)
 	return ax;
 }
 
-void vga_set_cursor_pos(u8 x, u8 y)
+void vga_text_set_cursor_pos(u8 x, u8 y)
 {
 	// The screen is 80 characters wide
-	u16 cursor_location = y * VGA_WIDTH + x;
+	u16 cursor_location = y * VGA_TEXT_WIDTH + x;
 	outb(VGA_CRTC_INDEX, 14);
 	outb(VGA_CRTC_DATA, cursor_location >> 8);
 	outb(VGA_CRTC_INDEX, 15);
@@ -281,4 +286,127 @@ void vga_disable_cursor()
 {
 	outb(VGA_CRTC_INDEX, 10);
 	outb(VGA_CRTC_DATA, 32);
+}
+
+void init_VGA_graphics(void)
+{
+	libvga_switch_mode13h();
+	vga_buffer = (u8*)VGA_GRAPHIC_ADDRESS;
+	VGA_graphics_clear_color(COLOR_BLACK);
+}
+
+void exit_VGA_graphics(void)
+{
+	u8 i;
+	/* Clear MISC registers */
+	outb(VGA_MISC_WRITE, 0x00);
+
+	/* Clear SEQ registers */
+	for (i = 0; i < VGA_NUM_SEQ_REGS; i++)
+	{
+		outb(VGA_SEQ_INDEX, i);
+		outb(VGA_SEQ_DATA, 0x00);
+	}
+
+	/* Clear CTRC registers */
+	for (i = 0; i < VGA_NUM_CRTC_REGS; i++)
+	{
+		outb(VGA_CRTC_INDEX, i);
+		outb(VGA_CRTC_DATA, 0x00);
+	}
+
+	/* Clear GC registers */
+	for (i = 0; i < VGA_NUM_GC_REGS; i++)
+	{
+		outb(VGA_GC_INDEX, i);
+		outb(VGA_GC_DATA, 0x00);
+	}
+
+	/* Clear AC registers */
+	for (i = 0; i < VGA_NUM_AC_REGS; i++)
+	{
+		outb(VGA_AC_INDEX, i);
+		outb(VGA_AC_WRITE, 0x00);
+	}
+	outb(VGA_AC_INDEX, 0x00);
+}
+
+void VGA_graphics_clear_color(u8 color)
+{
+	for (u32 index = 0; index < VGA_GRAPHIC_TOTAL_ITEMS; index++)
+		vga_buffer[index] = color;
+}
+
+void VGA_graphics_put_pixel(u16 x, u16 y, u8 color)
+{
+	u32 index = 0;
+	index = 320 * y + x;
+	if (index < VGA_GRAPHIC_TOTAL_ITEMS)
+		vga_buffer[index] = color;
+}
+
+void VGA_graphics_draw_line(u16 x1, u16 y1, u16 x2, u16 y2, u8 color)
+{
+	if (y1 == y2)
+	{
+		for (u16 i = x1; i <= x2; i++)
+			VGA_graphics_put_pixel(i, y1, color);
+		return;
+	}
+
+	if (x1 == x2)
+	{
+		for (u16 i = y1; i <= y2; i++)
+			VGA_graphics_put_pixel(x1, i, color);
+		return;
+	}
+}
+
+void VGA_graphics_draw_rect(u16 x, u16 y, u16 width, u16 height, u8 color)
+{
+	VGA_graphics_draw_line(x, y, x + width, y, color);
+	VGA_graphics_draw_line(x, y, x, y + height, color);
+	VGA_graphics_draw_line(x + width, y, x + width, y + height, color);
+	VGA_graphics_draw_line(x, y + height, x + width, y + height, color);
+}
+
+void VGA_graphics_fill_rect(u16 x, u16 y, u16 width, u16 height, u8 color)
+{
+	VGA_graphics_draw_rect(x, y, width, height, color);
+	for (int i = 0; i < height; i++)
+		VGA_graphics_draw_line(x, y + i, x + width, y + i, color);
+}
+
+void draw_bresenham_circle(int xc, int yc, int x, int y, u8 color)
+{
+	VGA_graphics_put_pixel(xc + x, yc + y, color);
+	VGA_graphics_put_pixel(xc - x, yc + y, color);
+	VGA_graphics_put_pixel(xc + x, yc - y, color);
+	VGA_graphics_put_pixel(xc + x, yc + y, color);
+	VGA_graphics_put_pixel(xc - x, yc - y, color);
+	VGA_graphics_put_pixel(xc + y, yc + x, color);
+	VGA_graphics_put_pixel(xc - y, yc + x, color);
+	VGA_graphics_put_pixel(xc + y, yc - x, color);
+	VGA_graphics_put_pixel(xc - y, yc - x, color);
+}
+
+void VGA_graphics_draw_circle(u16 x, u16 y, u16 radius, u8 color)
+{
+	int x2 = 0, y2 = radius;
+	int d = 3 - 2 * radius;
+	draw_bresenham_circle(x, y, x2, y2, color);
+	while (y2 >= x2)
+	{
+		x2++;
+		if (d > 0)
+		{
+			y2--;
+			d += 4 * (x2 - y2) + 10;
+		}
+		else
+		{
+			d += 4 * x2 + 6;
+		}
+		draw_bresenham_circle(x, y, x2, y2, color);
+	}
 }
