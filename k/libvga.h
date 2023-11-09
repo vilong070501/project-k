@@ -73,23 +73,21 @@
 #define VGA_TEXT_HEIGHT     25
 #define VGA_TEXT_TOTAL_ITEMS     2000
 
+/* Some color whose value is the index in libvga_default_palette */
 typedef enum {
-    COLOR_BLACK,
-    COLOR_BLUE,
-    COLOR_GREEN,
-    COLOR_CYAN,
-    COLOR_RED,
-    COLOR_MAGENTA,
-    COLOR_BROWN,
-    COLOR_GREY,
-    COLOR_DARK_GREY,
-    COLOR_BRIGHT_BLUE,
-    COLOR_BRIGHT_GREEN,
-    COLOR_BRIGHT_CYAN,
-    COLOR_BRIGHT_RED,
-    COLOR_BRIGHT_MAGENTA,
-    COLOR_YELLOW,
-    COLOR_WHITE,
+    COLOR_BLACK = 0,
+    COLOR_BLUE = 252,
+    COLOR_GREEN = 2,
+    COLOR_CYAN = 254,
+    COLOR_RED = 249,
+    COLOR_MAGENTA = 253,
+    COLOR_ORANGE = 47,
+    COLOR_BROWN = 19,
+    COLOR_GREY = 164,
+    COLOR_BRIGHT_BLUE = 243,
+    COLOR_BRIGHT_GREEN = 116,
+    COLOR_YELLOW = 251,
+    COLOR_WHITE = 255,
 } VGA_COLOR_TYPE;
 
 void libvga_set_palette(unsigned int *new_palette, size_t size);
@@ -112,7 +110,7 @@ void libvga_switch_mode3h(void);
  * 
  * return complete item with fore and back color to be placed at VGA address
 */
-u32 vga_text_item_entry(u8 ch, VGA_COLOR_TYPE fore_color, VGA_COLOR_TYPE back_color);
+u16 vga_text_item_entry(u8 ch, VGA_COLOR_TYPE fore_color, VGA_COLOR_TYPE back_color);
 
 /**
  * Set cursor position to given (x,y)
@@ -128,12 +126,11 @@ void vga_disable_cursor(void);
 
 void init_VGA_graphics(void);
 void exit_VGA_graphics(void);
-void VGA_graphics_clear_color(u8 color);
+void VGA_graphics_fill_color(u8 color);
 void VGA_graphics_put_pixel(u16 x, u16 y, u8 color);
 void VGA_graphics_draw_line(u16 x1, u16 y1, u16 x2, u16 y2, u8 color);
 void VGA_graphics_draw_rect(u16 x, u16 y, u16 width, u16 height, u8 color);
 void VGA_graphics_fill_rect(u16 x, u16 y, u16 width, u16 height, u8 color);
-void draw_bresenham_circle(int xc, int yc, int x, int y, u8 color);
 void VGA_graphics_draw_circle(u16 x, u16 y, u16 radius, u8 color);
 
 #endif				/* !LIBVGA_H */

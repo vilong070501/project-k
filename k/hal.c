@@ -31,6 +31,4 @@ void HAL_initialize(void)
     init_mouse();
     console_printf("Mouse initialization finished\n");
     init_VGA_graphics();
-    VGA_graphics_clear_color(COLOR_WHITE);
-    VGA_graphics_draw_rect(10, 10, 10, 10, COLOR_GREEN);
 }

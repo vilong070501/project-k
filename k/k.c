@@ -47,12 +47,15 @@ void k_main(unsigned long magic, multiboot_info_t *info)
 
     HAL_initialize();
 
-    console_printf("Type something...\n");
+    VGA_graphics_fill_color(COLOR_CYAN);
+    VGA_graphics_draw_rect(10, 10, 10, 10, COLOR_GREEN);
 
-    while(1)
-    {
-        console_printf("%d", keyboard_getChar());
-    }
+    // console_printf("Type something...\n");
+
+    // while(1)
+    // {
+    //     console_printf("%d", keyboard_getChar());
+    // }
 
     // Raise Division by zero exception
     // asm volatile ("mov $0, %eax");

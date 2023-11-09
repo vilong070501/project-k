@@ -256,7 +256,7 @@ void libvga_switch_mode3h(void)
 	libvga_write_regs(libvga_regs_80x25xtext);
 }
 
-u32 vga_text_item_entry(u8 ch, VGA_COLOR_TYPE fore_color, VGA_COLOR_TYPE back_color)
+u16 vga_text_item_entry(u8 ch, VGA_COLOR_TYPE fore_color, VGA_COLOR_TYPE back_color)
 {
 	u16 ax = 0;
 	u8 ah = 0, al = 0;
@@ -292,7 +292,7 @@ void init_VGA_graphics(void)
 {
 	libvga_switch_mode13h();
 	vga_buffer = (u8*)VGA_GRAPHIC_ADDRESS;
-	VGA_graphics_clear_color(COLOR_BLACK);
+	VGA_graphics_fill_color(COLOR_BLACK);
 }
 
 void exit_VGA_graphics(void)
@@ -331,7 +331,7 @@ void exit_VGA_graphics(void)
 	outb(VGA_AC_INDEX, 0x00);
 }
 
-void VGA_graphics_clear_color(u8 color)
+void VGA_graphics_fill_color(u8 color)
 {
 	for (u32 index = 0; index < VGA_GRAPHIC_TOTAL_ITEMS; index++)
 		vga_buffer[index] = color;
