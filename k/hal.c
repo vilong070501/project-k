@@ -6,6 +6,7 @@
 #include "include/k/irq.h"
 #include "include/k/isr.h"
 #include "include/k/keyboard.h"
+#include "include/k/mouse.h"
 #include "include/k/timer.h"
 #include "../libs/libc/include/stdio.h"
 #include "libvga.h"
@@ -25,8 +26,11 @@ void HAL_initialize(void)
     console_printf("IRQ initialization finished\n");
     init_timer();
     console_printf("Timer initialization finished\n");
+    vga_disable_cursor();
     init_keyboard();
     console_printf("Keyboard initialization finished\n");
+    init_mouse();
+    console_printf("Mouse initialization finished\n");
     init_ATA();
     console_printf("ATA initialization finished\n");
 }
