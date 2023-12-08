@@ -47,30 +47,29 @@ void k_main(unsigned long magic, multiboot_info_t *info)
 
     HAL_initialize();
 
-    console_printf("Type something...\n");
-
-    while(1)
-    {
-        console_printf("%d", keyboard_getChar());
-    }
-
+    /******************** Test for raising exception ********************/
     // Raise Division by zero exception
     // asm volatile ("mov $0, %eax");
     // asm volatile ("div %eax");
     // asm volatile("ret");
 
-    // Rasie another Division by zero exception due to Overflow
+    // Raise another Division by zero exception due to Overflow
     // asm volatile ("mov 0xffffffff, %eax");
     // asm volatile ("mov 0xffffffff, %edx");
     // asm volatile ("mov $0x2, %ebx");
     // asm volatile ("div %ebx");
     // asm volatile("ret");
 
+    /******************** Test for Timer module ********************/
     // add_timer_function(function_1, 200);
     // add_timer_function(function_2, 300);
-    // while(1) {
-    //     console_printf("Hello\n");
-    //     sleep(1);
+
+    /******************** Test for Keyboard module ********************/
+    // console_printf("Type something...\n");
+
+    // while(1)
+    // {
+    //     console_printf("%d", keyboard_getChar());
     // }
 
 	char star[4] = "|/-\\";

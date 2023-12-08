@@ -26,11 +26,11 @@ void HAL_initialize(void)
     console_printf("IRQ initialization finished\n");
     init_timer();
     console_printf("Timer initialization finished\n");
-    vga_disable_cursor();
-    init_keyboard();
-    console_printf("Keyboard initialization finished\n");
-    init_mouse();
-    console_printf("Mouse initialization finished\n");
-    init_ATA();
-    console_printf("ATA initialization finished\n");
+    // vga_disable_cursor();
+    // init_keyboard();
+    // console_printf("Keyboard initialization finished\n");
+    // init_mouse();
+    // console_printf("Mouse initialization finished\n");
+    // init_ATA();
+    // console_printf("ATA initialization finished\n");
 }
