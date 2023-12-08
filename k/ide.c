@@ -537,93 +537,6 @@ void IDE_irq(void)
     ide_irq_invoked = 1;
 }
 
-/**
- * Read from ATAPI drive
- * - drive is the drive number, which is from 0 to 3
- * - lba is the LBA address
- * - nb_sects is the number of sectors. It should always be 1,
- * in case of reading more than one sectors, re-execute this function
- * with the updated LBA address
- * - selector is the segment selector
- * - edi is the offset of the selector
-*/
-/*
-u8 IDE_ATAPI_read(u8 drive, u32 lba, u8 nb_sects, u16 selector, u32 edi)
-{
-    u8 channel = ide_devices[drive].channel;
-    u8 slavebits = ide_devices[drive].drive;
-    u16 bus = ide_channels[channel].base;
-    u32 words = 1024; // Sector size. ATAPI drives have a sector siez of 2048 bytes
-    u8 err;
-    int i;
-
-    // Enable IRQs
-    IDE_write_register(channel, ATA_REG_CONTROL(0x0), ide_channels[channel].no_int = ide_irq_invoked = 0x0);
-
-    // (I) Setup SCSI packet
-    scsi_packet.op_code = READ_12;
-    scsi_packet.flags_lo = 0x0;
-    scsi_packet.lba_hi = (lba >> 24) & 0xFF;
-    scsi_packet.lba_mihi = (lba >> 16) & 0xFF;
-    scsi_packet.lba_milo = (lba >> 8) & 0xFF;
-    scsi_packet.lba_lo = (lba >> 0) & 0xFF;
-    scsi_packet.transfer_length_hi = 0x0;
-    scsi_packet.transfer_length_mihi = 0x0;
-    scsi_packet.transfer_length_milo = 0x0;
-    scsi_packet.transfer_length_lo = nb_sects;
-    scsi_packet.flags_hi = 0x0;
-    scsi_packet.control = 0x0;
-
-    // Select the drive
-    IDE_write_register(channel, ATA_REG_DRIVE(0x0), slavebits << 4);
-
-    // Delay 400ns for select to complete
-    for (i = 0; i < 4; i++)
-        IDE_read_register(channel, ATA_REG_ALTSTATUS(0x0)); // Reading the Alternate status ports wastes 100ns
-
-    // (IV) Inform the controller that we use PIO mode
-    IDE_write_register(channel, ATA_REG_FEATURES(0x0), 0);  // PIO mode
-
-    // (V) Tell the controller the size of buffer
-    IDE_write_register(channel, ATA_REG_LBA_MI(0x0), (words * 2) & 0xFF);  // Lower byte of sector size
-    IDE_write_register(channel, ATA_REG_LBA_HI(0x0), (words * 2) >> 8);    // Upper byte of sector size
-
-    // (VI) Send the Packet Command
-    IDE_write_register(channel, ATA_REG_COMMAND(0x0), PACKET);
-
-    // (VII) Waiting for the driver to finish and return an error code
-    if ((err = IDE_polling(channel, 1)))
-        return err;     // Polling and return if there is an error
-
-    // (VIII) Sending the packet data
-    asm ("rep outsw" :: "c"(6), "d"(bus), "S"(scsi_packet));
-
-    // (IX) Receiving data
-    // Here we should wait for an IRQ, then read the sector
-    // These two operations should be repeated for each sector
-    for (i = 0; i < nb_sects; i++)
-    {
-        IDE_wait_irq();     // Wait for an IRQ
-        if ((err = IDE_polling(channel, 1)))
-            return err;
-        asm("pushw %es");
-        asm("mov %%ax, %%es"::"a"(selector));
-        asm("rep insw"::"c"(words), "d"(bus), "D"(edi));// Receive Data.
-        asm("popw %es");
-        edi += (words * 2);
-    }
-
-    // (X) Wait for an IRQ
-    IDE_wait_irq();
-
-    // (XI) Waiting for BSY and DRQ to clear
-    while (IDE_read_register(channel, ATA_REG_STATUS(0x0)) & (BSY | DRQ))
-        ;
-
-    return 0;
-}
-*/
-
 int IDE_read_sectors(u8 drive, u8 nb_sects, u32 lba, u16 es, u32 edi)
 {
     // 1: Check if the drive presents
@@ -644,9 +557,6 @@ int IDE_read_sectors(u8 drive, u8 nb_sects, u32 lba, u16 es, u32 edi)
         u8 err;
         if (ide_devices[drive].type == IDE_ATA)
             err = IDE_ATA_access(ATA_WRITE, drive, lba, nb_sects, edi);
-        // else if (ide_devices[drive].type == IDE_ATAPI)
-        //     for (u8 i = 0; i < nb_sects; i++)
-        //         err = IDE_ATAPI_read(drive, lba + i, 1, es, edi + (i*2048));
         return IDE_print_error(drive, err);
     }
     return 0;
@@ -673,8 +583,6 @@ int IDE_write_sectors(u8 drive, u8 nb_sects, u32 lba, u16 es, u32 edi)
         u8 err;
         if (ide_devices[drive].type == IDE_ATA)
             err = IDE_ATA_access(ATA_WRITE, drive, lba, nb_sects, edi);
-        // else if (ide_devices[drive].type == IDE_ATAPI)
-        //     err = 4;    // Write-protected
         return IDE_print_error(drive, err);
     }
     return 0;
