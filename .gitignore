@@ -7,3 +7,4 @@ libs/
 *.iso
 *log.txt
 *log
+.idea/

@@ -1,6 +1,7 @@
 #include "include/k/console.h"
 #include "include/k/gdt.h"
 #include "include/k/hal.h"
+#include "include/k/ide.h"
 #include "include/k/idt.h"
 #include "include/k/irq.h"
 #include "include/k/isr.h"
@@ -31,4 +32,6 @@ void HAL_initialize(void)
     init_mouse();
     console_printf("Mouse initialization finished\n");
     init_VGA_graphics();
+    init_ATA();
+    console_printf("ATA initialization finished\n");
 }

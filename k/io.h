@@ -33,6 +33,20 @@ static inline u16 inw(u16 port)
 	return res;
 }
 
+static inline void outl(u16 port, u16 val)
+{
+	asm volatile ("outl %%eax, %%dx" : /* No output */ : "d"(port), "a"(val));
+}
+
+static inline u16 inl(u16 port)
+{
+	u16 res;
+
+	asm volatile ("inl %%dx, %%eax" : "=&a"(res) : "d"(port));
+
+	return res;
+}
+
 static inline void iowait()
 {
 	outb(UNUSED_PORT, 0);
