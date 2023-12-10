@@ -69,7 +69,7 @@ void k_main(unsigned long magic, multiboot_info_t *info)
 
     // while(1)
     // {
-    //     console_printf("%d", keyboard_getChar());
+    //     console_printf("%c", keyboard_getChar());
     // }
 
 	char star[4] = "|/-\\";

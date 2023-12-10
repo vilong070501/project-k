@@ -2,7 +2,7 @@
 
 This is a project implementing a simple kernel with some basic functionalities.
 
-The project is proposed by LSE Epita.
+The project is proposed by [LSE Epita](https://github.com/lse/k).
 
 Student's name: LUONG Vi Long (vi-long.luong@epita.fr)
 
@@ -77,20 +77,20 @@ interrupts and send them to the appropriate system interrupt. When an IRQ is fir
 interrupt is not masked), and find out the number of the IDT entry to call. You will find the code of this module in **k/pic_8259.c** file.
 
 
-- `Timer` module, which handles time intervals in the kernel. This driver does not provide real date and time calculation routines. It is rather used
+- `Timer` driver, which handles time intervals in the kernel. This driver does not provide real date and time calculation routines. It is rather used
 as a rate generator, to wake the kernel up at accurate intervals of time, measured in ticks. You will find the code of this module in **k/timer.c** file.
 
 
-- `Keyboard` module, which used to add a first form of input in the project K. This driver detects when a key is pressed by configuring the keyboard
+- `Keyboard` driver, which used to add a first form of input in the project K. This driver detects when a key is pressed by configuring the keyboard
 controller to trigger interrupt when a key is pressed. It then displays the corresponded character to the screen by looking into a mapping array,
 which associates each key code to its character value. You will find the code of this module in **k/keyboard.c** file.
 
 
-- `Mouse` module, which is another form of input. This driver detects when one of the three mouse's keys is pressed (can be simultaneously), or when
+- `Mouse` driver, which is another form of input. This driver detects when one of the three mouse's keys is pressed (can be simultaneously), or when
 we move the mouse around the screen. You will find the code of this module in **k/mouse.c** file.
 
 
-- `ATA` module, which stands for **Advanced Technology Attachment**. In this project, I had implemented the IDE (**Integrated Drive Electronics**),
+- `ATA` driver, which stands for **Advanced Technology Attachment**. In this project, I had implemented the IDE (**Integrated Drive Electronics**),
 which refers to a standard interface used to connect storage devices, such as hard drives and CD-ROM drives, to a computer's motherboard.
 You will find the code of this module in **k/ide.c** file.
 
@@ -127,12 +127,95 @@ Or
 60|      asm volatile ("div %ebx");
 61|      asm volatile("ret");
 ```
-Then, just `make` and boost your kernel to see the exception.
+Then, `make` and boost your kernel to see the exception.
 
 2. Timer:
 
-In order to test the Timer manager in K, you have to register `timer_handler()` function to the first entry of IDT. I also prepared for you two
-function 
+In order to test the Timer manager in K, you have to register `timer_handler()` function to the first entry of IDT. I also prepared for you two test functions `function_1()` and `function_2()` in **k/k.c** to visualize how `Timer` driver works.
+
+Go to **k/hal.c** file and uncomment these lines:
+```C
+23|      init_ISR();
+24|      console_printf("ISR initialization finished\n");
+25|      init_IRQ();
+26|      console_printf("IRQ initialization finished\n");
+27|      init_timer();
+28|      console_printf("Timer initialization finished\n");
+```
+and in the **k/k.c** file, uncomment these two lines:
+```C
+64|      add_timer_function(function_1, 200);
+65|      add_timer_function(function_2, 300);
+```
+Then, `make` and boost your kernel to see how `Timer` driver works.
+
+3. Keyboard:
+
+In order to test the Keyboard manager in K, you have to register `keyboard_handler()` function to the second entry of IDT.
+
+To do so, go to **k/hal.c** file and uncomment these lines:
+```C
+23|      init_ISR();
+24|      console_printf("ISR initialization finished\n");
+25|      init_IRQ();
+26|      console_printf("IRQ initialization finished\n");
+27|      init_timer();
+28|      console_printf("Timer initialization finished\n");
+29|      vga_disable_cursor();
+30|      init_keyboard();
+31|      console_printf("Keyboard initialization finished\n");
+```
+and in the **k/k.c** file, uncomment these lines:
+```C
+68|      console_printf("Type something...\n");
+69|
+70|      while(1)
+71|      {
+72|          console_printf("%c", keyboard_getChar());
+73|      }
+```
+Then, `make` and boost your kernel to see how `Keyboard` driver works.
+
+4. Mouse:
+
+In order to test the Mouse manager in K, you have to register `mouse_handler()` function to the 13<sup>th</sup> entry of IDT.
+
+To do so, go to **k/hal.c** file and uncomment these lines:
+```C
+23|      init_ISR();
+24|      console_printf("ISR initialization finished\n");
+25|      init_IRQ();
+26|      console_printf("IRQ initialization finished\n");
+27|      init_timer();
+28|      console_printf("Timer initialization finished\n");
+29|      vga_disable_cursor();
+30|      init_keyboard();
+31|      console_printf("Keyboard initialization finished\n");
+32|      init_mouse();
+33|      console_printf("Mouse initialization finished\n");
+```
+`make` and boost your kernel. Once the kernel boost, click any mouse button and try to move your mouse around. You will see that
+the coordinates of the cursor are updated when the mouse move.
+
+5. ATA:
+
+In order to test the ATA driver in K, uncomment these lines in the **k/hal.c** file:
+```C
+23|      init_ISR();
+24|      console_printf("ISR initialization finished\n");
+25|      init_IRQ();
+26|      console_printf("IRQ initialization finished\n");
+27|      init_timer();
+28|      console_printf("Timer initialization finished\n");
+29|      vga_disable_cursor();
+30|      init_keyboard();
+31|      console_printf("Keyboard initialization finished\n");
+32|      init_mouse();
+33|      console_printf("Mouse initialization finished\n");
+34|      init_ATA();
+35|      console_printf("ATA initialization finished\n");
+```
+Then `make` and boost your system. You will see some information related to the actual drive of K.
 
 # References
 
