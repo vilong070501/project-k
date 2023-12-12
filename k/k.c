@@ -45,9 +45,11 @@ void k_main(unsigned long magic, multiboot_info_t *info)
 	(void)magic;
 	(void)info;
 
+    init_serial();
+
     HAL_initialize();
 
-    /******************** Test for raising exception ********************/
+    /******************** Test for Exception handler ********************/
     // Raise Division by zero exception
     // asm volatile ("mov $0, %eax");
     // asm volatile ("div %eax");
@@ -71,6 +73,10 @@ void k_main(unsigned long magic, multiboot_info_t *info)
     // {
     //     console_printf("%c", keyboard_getChar());
     // }
+  
+    /******************** Test for VGA graphic module ********************/
+    // VGA_graphics_fill_color(COLOR_WHITE);
+    // VGA_graphics_draw_rect(10, 10, 10, 10, COLOR_GREEN);
 
 	char star[4] = "|/-\\";
 	char *fb = (void *)0xb8000;

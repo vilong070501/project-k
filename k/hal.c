@@ -13,7 +13,9 @@
 
 void HAL_initialize(void)
 {
-    init_console(COLOR_WHITE, COLOR_BLACK);
+    /* When come to test VGA graphics */
+    // init_console(COLOR_WHITE, COLOR_BLACK);
+    init_console(COLOR_WHITE_TEXT, COLOR_BLACK);
     console_printf("Console initialization finished\n");
     init_GDT();
     console_printf("GDT initialization finished\n");
@@ -33,4 +35,6 @@ void HAL_initialize(void)
     // console_printf("Mouse initialization finished\n");
     // init_ATA();
     // console_printf("ATA initialization finished\n");
+    // init_VGA_graphics();
+    // console_printf("VGA graphic initialization finished\n");
 }
