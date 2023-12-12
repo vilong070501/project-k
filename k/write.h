@@ -5,6 +5,7 @@
 
 #define PORT 0x3F8 // COM1
 
+void init_serial();
 int write(const char *buf, size_t count);
 
 #endif

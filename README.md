@@ -107,8 +107,8 @@ to display something to the screen.
 In order to test the loading of the IDT into the system and declaration of some ISR, I have added an example which will raise a "Division by Zero"
 exception. First, go to the **k/hal.c** file, uncomment these lines:
 ```C
-23|      init_ISR();
-24|      console_printf("ISR initialization finished\n");
+25|      init_ISR();
+26|      console_printf("ISR initialization finished\n");
 ```
 and in the **k/k.c** file, uncomment one of these two examples:
 
@@ -135,12 +135,12 @@ In order to test the Timer manager in K, you have to register `timer_handler()` 
 
 Go to **k/hal.c** file and uncomment these lines:
 ```C
-23|      init_ISR();
-24|      console_printf("ISR initialization finished\n");
-25|      init_IRQ();
-26|      console_printf("IRQ initialization finished\n");
-27|      init_timer();
-28|      console_printf("Timer initialization finished\n");
+25|      init_ISR();
+26|      console_printf("ISR initialization finished\n");
+27|      init_IRQ();
+28|      console_printf("IRQ initialization finished\n");
+29|      init_timer();
+30|      console_printf("Timer initialization finished\n");
 ```
 and in the **k/k.c** file, uncomment these two lines:
 ```C
@@ -155,15 +155,15 @@ In order to test the Keyboard manager in K, you have to register `keyboard_handl
 
 To do so, go to **k/hal.c** file and uncomment these lines:
 ```C
-23|      init_ISR();
-24|      console_printf("ISR initialization finished\n");
-25|      init_IRQ();
-26|      console_printf("IRQ initialization finished\n");
-27|      init_timer();
-28|      console_printf("Timer initialization finished\n");
-29|      vga_disable_cursor();
-30|      init_keyboard();
-31|      console_printf("Keyboard initialization finished\n");
+25|      init_ISR();
+26|      console_printf("ISR initialization finished\n");
+27|      init_IRQ();
+28|      console_printf("IRQ initialization finished\n");
+29|      init_timer();
+30|      console_printf("Timer initialization finished\n");
+31|      vga_disable_cursor();
+32|      init_keyboard();
+33|      console_printf("Keyboard initialization finished\n");
 ```
 and in the **k/k.c** file, uncomment these lines:
 ```C
@@ -182,17 +182,17 @@ In order to test the Mouse manager in K, you have to register `mouse_handler()` 
 
 To do so, go to **k/hal.c** file and uncomment these lines:
 ```C
-23|      init_ISR();
-24|      console_printf("ISR initialization finished\n");
-25|      init_IRQ();
-26|      console_printf("IRQ initialization finished\n");
-27|      init_timer();
-28|      console_printf("Timer initialization finished\n");
-29|      vga_disable_cursor();
-30|      init_keyboard();
-31|      console_printf("Keyboard initialization finished\n");
-32|      init_mouse();
-33|      console_printf("Mouse initialization finished\n");
+25|      init_ISR();
+26|      console_printf("ISR initialization finished\n");
+27|      init_IRQ();
+28|      console_printf("IRQ initialization finished\n");
+29|      init_timer();
+30|      console_printf("Timer initialization finished\n");
+31|      vga_disable_cursor();
+32|      init_keyboard();
+33|      console_printf("Keyboard initialization finished\n");
+34|      init_mouse();
+35|      console_printf("Mouse initialization finished\n");
 ```
 `make` and boost your kernel. Once the kernel boost, click any mouse button and try to move your mouse around. You will see that
 the coordinates of the cursor are updated when the mouse move.
@@ -201,21 +201,75 @@ the coordinates of the cursor are updated when the mouse move.
 
 In order to test the ATA driver in K, uncomment these lines in the **k/hal.c** file:
 ```C
-23|      init_ISR();
-24|      console_printf("ISR initialization finished\n");
-25|      init_IRQ();
-26|      console_printf("IRQ initialization finished\n");
-27|      init_timer();
-28|      console_printf("Timer initialization finished\n");
-29|      vga_disable_cursor();
-30|      init_keyboard();
-31|      console_printf("Keyboard initialization finished\n");
-32|      init_mouse();
-33|      console_printf("Mouse initialization finished\n");
-34|      init_ATA();
-35|      console_printf("ATA initialization finished\n");
+25|      init_ISR();
+26|      console_printf("ISR initialization finished\n");
+27|      init_IRQ();
+28|      console_printf("IRQ initialization finished\n");
+29|      init_timer();
+30|      console_printf("Timer initialization finished\n");
+31|      vga_disable_cursor();
+32|      init_keyboard();
+33|      console_printf("Keyboard initialization finished\n");
+34|      init_mouse();
+35|      console_printf("Mouse initialization finished\n");
+36|      init_ATA();
+37|      console_printf("ATA initialization finished\n");
 ```
 Then `make` and boost your system. You will see some information related to the actual drive of K.
+
+6. VGA graphics mode:
+
+In order to test the VGA graphics mode in K
+
+Firstly, in **k/console.c**, comment this line 
+`16|     VGA_COLOR_TYPE fore_color = COLOR_WHITE_TEXT, back_color = COLOR_BLACK;`
+and uncomment this line
+`15|     VGA_COLOR_TYPE fore_color = COLOR_WHITE, back_color = COLOR_BLACK;`
+
+To test the change of color in graphics mode, we will use the mouse driver.
+
+Go to **k/mouse.c** and uncomment these lines
+```C
+155|     clear_console(COLOR_WHITE_TEXT, COLOR_BLACK);
+156|     console_gotoxy(mouse_x_pos, mouse_y_pos);
+157|     console_putchar('X');
+158|     print_mouse_info();
+```
+and uncomment these lines:
+```C
+160|     VGA_graphics_fill_color(COLOR_WHITE);
+161|     VGA_graphics_draw_rect(mouse_x_pos, mouse_y_pos, 10, 10, COLOR_BLUE);
+162|     print_mouse_info_VGA();
+```
+In the **k/hal.c** file, comment this line 
+`18|     init_console(COLOR_WHITE_TEXT, COLOR_BLACK);`
+and uncomment theses lines
+```C
+17|     init_console(COLOR_WHITE, COLOR_BLACK);
+
+25|      init_ISR();
+26|      console_printf("ISR initialization finished\n");
+27|      init_IRQ();
+28|      console_printf("IRQ initialization finished\n");
+29|      init_timer();
+30|      console_printf("Timer initialization finished\n");
+31|      vga_disable_cursor();
+32|      init_keyboard();
+33|      console_printf("Keyboard initialization finished\n");
+34|      init_mouse();
+35|      console_printf("Mouse initialization finished\n");
+
+38|      init_VGA_graphics();
+39|      console_printf("VGA graphic initialization finished\n");
+```
+Finally, in **k/k.c**, uncomment these two lines
+```C
+78|     VGA_graphics_fill_color(COLOR_WHITE);
+79|     VGA_graphics_draw_rect(10, 10, 10, 10, COLOR_GREEN);
+```
+Then `make`. Once you boost your system, you will see a white screen with a little green
+rectangle representing the mouse. Left lick the mouse over and over again to see the
+change of color. To get back to the previous color, right click it.
 
 # References
 

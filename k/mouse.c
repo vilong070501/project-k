@@ -96,6 +96,32 @@ static void print_mouse_info(void)
         console_printf("Middle button clicked\n");
 }
 
+VGA_COLOR_TYPE colors[] = {
+    COLOR_BLACK, COLOR_BLUE, COLOR_GREEN,
+    COLOR_CYAN, COLOR_RED, COLOR_MAGENTA,
+    COLOR_ORANGE, COLOR_BROWN, COLOR_GREY,
+    COLOR_BRIGHT_BLUE, COLOR_BRIGHT_GREEN,
+    COLOR_YELLOW, COLOR_WHITE };
+int current_index = 0;
+
+static void print_mouse_info_VGA(void)
+{
+    VGA_graphics_fill_rect(50, 50, 50, 50, colors[current_index]);
+    VGA_graphics_fill_rect(150, 50, 50, 50, colors[current_index]);
+    VGA_graphics_fill_rect(30, 130, 200, 30, colors[current_index]);
+
+    if (mouse_status.left_click)
+    {
+        if (colors[current_index] < COLOR_WHITE)
+            current_index++;
+    }
+    if (mouse_status.right_click)
+    {
+        if (colors[current_index] > COLOR_BLACK)
+            current_index--;
+    }
+}
+
 void mouse_handler(Registers *reg)
 {
     static u8 mouse_cycle = 0;
@@ -121,15 +147,19 @@ void mouse_handler(Registers *reg)
             mouse_x_pos	= 0;
         if (mouse_y_pos < 0)
             mouse_y_pos	= 0;
-        if (mouse_x_pos > VGA_WIDTH)
-            mouse_x_pos	= VGA_WIDTH - 1;
-        if (mouse_y_pos > VGA_HEIGHT)
-            mouse_y_pos	= VGA_HEIGHT - 1;
+        if (mouse_x_pos > VGA_TEXT_WIDTH)
+            mouse_x_pos	= VGA_TEXT_WIDTH - 1;
+        if (mouse_y_pos > VGA_TEXT_HEIGHT)
+            mouse_y_pos	= VGA_TEXT_HEIGHT - 1;
 
-        clear_console(COLOR_WHITE, COLOR_BLACK);
+        clear_console(COLOR_WHITE_TEXT, COLOR_BLACK);
         console_gotoxy(mouse_x_pos, mouse_y_pos);
         console_putchar('X');
         print_mouse_info();
+        /* When come to test VGA graphics */
+        // VGA_graphics_fill_color(COLOR_WHITE);
+        // VGA_graphics_draw_rect(mouse_x_pos, mouse_y_pos, 10, 10, COLOR_BLUE);
+        // print_mouse_info_VGA();
         mouse_cycle = 0;
         break;
     }
