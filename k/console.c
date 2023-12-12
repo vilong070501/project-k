@@ -11,7 +11,9 @@ static u32 vga_index;
 // cursor position
 static u8 cursor_pos_x = 0, cursor_pos_y = 0;
 // fore and back color values
-VGA_COLOR_TYPE fore_color = COLOR_WHITE, back_color = COLOR_BLACK;
+/* When come to test VGA graphics */
+// VGA_COLOR_TYPE fore_color = COLOR_WHITE, back_color = COLOR_BLACK;
+VGA_COLOR_TYPE fore_color = COLOR_WHITE_TEXT, back_color = COLOR_BLACK;
 
 static u16 temp_pages[MAXIMUM_PAGES][VGA_TEXT_TOTAL_ITEMS];
 u32 current_temp_page = 0;

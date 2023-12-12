@@ -88,6 +88,8 @@ typedef enum {
     COLOR_BRIGHT_GREEN = 116,
     COLOR_YELLOW = 251,
     COLOR_WHITE = 255,
+    /* In text mode */
+    COLOR_WHITE_TEXT = 15,
 } VGA_COLOR_TYPE;
 
 void libvga_set_palette(unsigned int *new_palette, size_t size);
